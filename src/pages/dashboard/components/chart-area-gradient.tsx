@@ -1,12 +1,10 @@
 import { useId } from "react"
-import { TrendingUp } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -45,7 +43,7 @@ export function ChartAreaGradient({ className }: { className?: string }) {
 
   return (
     <Card className={cn("ring-0 shadow-none border-none", className)}>
-      <CardHeader>
+      <CardHeader className="px-0">
         <CardTitle>Engagement over time</CardTitle>
         <CardDescription>
           Unique touches from email and push in the last six months. Stacks show

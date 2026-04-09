@@ -1,1 +1,1 @@
-export { default as SettingsTable } from "./table"
+export { default as ProfileSettings } from "./profile-settings"

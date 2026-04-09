@@ -1,4 +1,4 @@
-import { AddSegmentDialog, SegmentationTable } from "./components"
+import { AddSegmentDialog, SegmentationQuickStartCards, SegmentationTable } from "./components"
 
 export default function SegmentationPage() {
   return (
@@ -6,6 +6,7 @@ export default function SegmentationPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <AddSegmentDialog />
       </div>
+        <SegmentationQuickStartCards />
       <SegmentationTable />
     </div>
   )

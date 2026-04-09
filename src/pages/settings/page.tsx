@@ -5,7 +5,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-import { SettingsTable } from "./components"
+import { ProfileSettings } from "./components"
 import NotificationSettingsPage from "./pages/notification/page"
 import ApiKeySettingsPage from "./pages/api-key/page"
 import AttributesSettingsPage from "./pages/attributes/page"
@@ -45,10 +45,10 @@ export default function SettingsPage() {
 
         <TabsContent value="profile" className="space-y-6">
           <TabPlaceholder
-            title="Profile & workspace"
-            description="Workspace identity, regional defaults, and high-level preferences. Key values are summarized below."
+            title="My profile"
+            description="Manage how you appear in the product, contact details, and billing identity. Use Edit on each section to update values."
           />
-          <SettingsTable />
+          <ProfileSettings />
         </TabsContent>
 
         <TabsContent value="webhooks">

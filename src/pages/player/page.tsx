@@ -1,8 +1,11 @@
-import { PlayerTable } from "./components"
+import { ImportUsersDropdown, PlayerTable } from "./components"
 
 export default function PlayerPage() {
   return (
-    <div className="px-8 py-4">
+    <div className="space-y-4 px-8 py-4">
+      <div className="flex justify-end">
+        <ImportUsersDropdown />
+      </div>
       <PlayerTable />
     </div>
   )

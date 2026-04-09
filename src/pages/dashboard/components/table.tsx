@@ -15,19 +15,19 @@ const METRICS = [
   "API error rate",
   "Monthly recurring revenue",
   "Signup conversion",
-  "Email deliverability",
-  "Push opt-in rate",
-  "Segment sync lag",
-  "Webhook success",
-  "Support tickets opened",
-  "Feature adoption (new UI)",
-  "Churn rate",
-  "Avg session duration",
-  "Pages per session",
-  "Return visitors",
-  "Trial-to-paid",
-  "Invoice collection time",
-  "Data pipeline latency",
+  // "Email deliverability",
+  // "Push opt-in rate",
+  // "Segment sync lag",
+  // "Webhook success",
+  // "Support tickets opened",
+  // "Feature adoption (new UI)",
+  // "Churn rate",
+  // "Avg session duration",
+  // "Pages per session",
+  // "Return visitors",
+  // "Trial-to-paid",
+  // "Invoice collection time",
+  // "Data pipeline latency",
 ] as const
 
 const rows = METRICS.map((metric, i) => ({
@@ -66,7 +66,7 @@ const rows = METRICS.map((metric, i) => ({
 export default function DashboardTable() {
   return (
     <div>
-      <div className="bg-background overflow-hidden rounded-md border">
+      <div className="bg-background overflow-hidden rounded-md border mask-b-from-5% mask-b-to-95%">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
