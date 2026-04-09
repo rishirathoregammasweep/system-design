@@ -184,6 +184,13 @@ export function LayoutSidebar() {
   const { pathname } = useLocation()
 
   const pageMeta = useMemo(() => {
+    if (pathname === "/templates/new") {
+      return {
+        heading: "Create email template",
+        description:
+          "Define a name, subject line, and HTML body for your email template.",
+      }
+    }
     const item = sidebarMenus.find((m) => m.path === pathname)
     if (item) {
       return { heading: item.heading, description: item.description }
@@ -260,21 +267,23 @@ export function LayoutSidebar() {
       </div>
       <div className="col-span-5 flex h-full w-full min-h-0 flex-col overflow-hidden rounded-lg bg-white dark:bg-neutral-900 shadow">
         <div className="min-h-0 flex-1 overflow-auto">
-          <header className="flex items-start justify-between gap-6 px-8 py-6">
-            <div className="min-w-0 space-y-1">
-              <h1 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-                {pageMeta.heading}
-              </h1>
-              {pageMeta.description ? (
-                <p className="text-muted-foreground text-md dark:text-muted-foreground leading-7 ">
-                  {pageMeta.description}
-                </p>
-              ) : null}
-            </div>
-            <div className="flex shrink-0 items-center gap-2 pt-0.5">
-              <HeaderAvatar />
-            </div>
-          </header>
+          {pathname !== "/create-journey" ? (
+            <header className="flex items-start justify-between gap-6 px-8 py-6">
+              <div className="min-w-0 space-y-1">
+                <h1 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                  {pageMeta.heading}
+                </h1>
+                {pageMeta.description ? (
+                  <p className="text-muted-foreground text-md dark:text-muted-foreground leading-7 ">
+                    {pageMeta.description}
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex shrink-0 items-center gap-2 pt-0.5">
+                <HeaderAvatar />
+              </div>
+            </header>
+          ) : null}
           <Outlet />
         </div>
       </div>

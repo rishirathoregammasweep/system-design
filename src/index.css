@@ -129,3 +129,7 @@
     @apply font-sans;
     }
 }
+
+.blockbuilder-branding{
+  display: none!important;
+}

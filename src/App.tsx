@@ -8,6 +8,7 @@ import ApiPage from "@/pages/api/page"
 import CampaignPage from "@/pages/campaign/page"
 import DashboardPage from "@/pages/dashboard/page"
 import EventsPage from "@/pages/events/page"
+import CreateJourneyPage from "@/pages/journeys/create/page"
 import JourneysPage from "@/pages/journeys/page"
 import PlayerPage from "@/pages/player/page"
 import SearchPage from "@/pages/search/page"
@@ -15,6 +16,7 @@ import SegmentationPage from "@/pages/segmentation/page"
 import NotFoundPage from "@/pages/not-found/page"
 import SettingsPage from "@/pages/settings/page"
 import TriggersPage from "@/pages/triggers/page"
+import TemplatesPage from "@/pages/templates/page"
 import UsersPage from "@/pages/users/page"
 
 function PageTitle({ title }: { title: string }) {
@@ -40,6 +42,7 @@ const routeElements: Partial<
   "/search": <SearchPage />,
   "/api": <ApiPage />,
   "/settings": <SettingsPage />,
+  "/templates": <TemplatesPage />,
 }
 
 export function App() {
@@ -57,6 +60,7 @@ export function App() {
               }
             />
           ))}
+          <Route path="create-journey" element={<CreateJourneyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

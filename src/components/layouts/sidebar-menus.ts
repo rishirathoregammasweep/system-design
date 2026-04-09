@@ -11,6 +11,7 @@ import {
   BarChart,
   AppleIntelligenceIcon,
   Lightning,
+  Mail01Icon,
 } from "@hugeicons/core-free-icons"
 
 export const sidebarMenus = [
@@ -55,6 +56,13 @@ export const sidebarMenus = [
     path: "/campaigns",
     heading: "Campaigns",
     description: "Create, launch, and monitor marketing campaigns.",
+  },
+  {
+    title: "Templates",
+    icon: Mail01Icon,
+    path: "/templates",
+    heading: "Email templates",
+    description: "Manage reusable HTML layouts for email campaigns and automations.",
   },
   {
     title: "Journeys",
