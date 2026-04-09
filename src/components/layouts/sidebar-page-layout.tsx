@@ -23,7 +23,52 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import { sidebarMenus } from "@/components/layouts/sidebar-menus"
+import {
+  BookOpen01Icon,
+  CustomerService01Icon,
+  HelpCircleIcon,
+} from "@hugeicons/core-free-icons"
+
+function HeaderHelpMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-foreground rounded-full"
+          aria-label="Help and documentation"
+        >
+          <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={2} className="size-5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-48">
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <HugeiconsIcon
+              icon={CustomerService01Icon}
+              strokeWidth={2}
+              className="size-4 opacity-80"
+            />
+            Support
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <HugeiconsIcon
+              icon={BookOpen01Icon}
+              strokeWidth={2}
+              className="size-4 opacity-80"
+            />
+            Documentation
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
 function HeaderAvatar() {
   const { theme, setTheme } = useTheme()
 
@@ -279,7 +324,8 @@ export function LayoutSidebar() {
                   </p>
                 ) : null}
               </div>
-              <div className="flex shrink-0 items-center gap-2 pt-0.5">
+              <div className="flex shrink-0 items-center gap-1 pt-0.5">
+                <HeaderHelpMenu />
                 <HeaderAvatar />
               </div>
             </header>

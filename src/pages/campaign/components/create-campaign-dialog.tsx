@@ -55,14 +55,14 @@ export function CreateCampaignDialog() {
             </DialogHeader>
             <Tabs defaultValue="email" className="w-full">
               <TabsList className="w-full justify-start">
-                <TabsTrigger value="push" type="button" disabled>
-                  Push
-                </TabsTrigger>
                 <TabsTrigger value="email" type="button">
                   Email
                 </TabsTrigger>
                 <TabsTrigger value="sms" type="button">
                   SMS
+                </TabsTrigger>
+                <TabsTrigger value="push" type="button" disabled>
+                  Push
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="email" className="mt-4 space-y-4">
