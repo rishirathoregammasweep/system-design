@@ -44,7 +44,7 @@ export function ChartAreaGradient({ className }: { className?: string }) {
   const fillPush = `fillPush-${uid}`
 
   return (
-    <Card className={cn("p-4 ring-0 shadow-none border-none", className)}>
+    <Card className={cn("ring-0 shadow-none border-none", className)}>
       <CardHeader>
         <CardTitle>Engagement over time</CardTitle>
         <CardDescription>
@@ -52,7 +52,7 @@ export function ChartAreaGradient({ className }: { className?: string }) {
           combined reach when both channels contacted the same.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <ChartContainer config={chartConfig}>
           <AreaChart
             accessibilityLayer
@@ -116,19 +116,6 @@ export function ChartAreaGradient({ className }: { className?: string }) {
           </AreaChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none font-medium">
-              Combined touches up 5.2% vs. last month{" "}
-              <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January – June 2026 · indexed to workspace timezone
-            </div>
-          </div>
-        </div>
-      </CardFooter>
     </Card>
   )
 }

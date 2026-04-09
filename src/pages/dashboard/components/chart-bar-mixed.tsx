@@ -54,14 +54,14 @@ const chartConfig = {
 export function ChartBarMixed({ className }: { className?: string }) {
   return (
     <Card className={cn("p-4 ring-0 shadow-none border-none", className)}>
-      <CardHeader>
+      <CardHeader className="px-0">
         <CardTitle>Reach by channel</CardTitle>
         <CardDescription>
           Estimated unique recipients in the last 30 days, grouped by the
           channel that delivered your campaigns and journeys.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
@@ -92,16 +92,6 @@ export function ChartBarMixed({ className }: { className?: string }) {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Email and push reach up 5.2% vs. prior 30 days{" "}
-          <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Totals include deduplicated profiles when the same user appears on
-          multiple channels.
-        </div>
-      </CardFooter>
     </Card>
   )
 }

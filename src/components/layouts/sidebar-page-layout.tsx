@@ -59,7 +59,7 @@ function HeaderAvatar() {
         <DropdownMenuGroup>
           <DropdownMenuItem>Team</DropdownMenuItem>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Mode</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger className="duration-0">Mode</DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuRadioGroup
