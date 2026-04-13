@@ -17,8 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { badgeVariants } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
-import { Add01Icon, Cancel01Icon } from "@hugeicons/core-free-icons"
+import { Add01Icon, Cancel01Icon, TagsIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
 const COUNTRIES = [
@@ -57,11 +59,7 @@ const TIMEZONES = [
   "Australia/Sydney",
 ] as const
 
-type TagRow = { id: string; key: string; value: string }
-
-function newTagRow(): TagRow {
-  return { id: crypto.randomUUID(), key: "", value: "" }
-}
+type TagEntry = { id: string; key: string; value: string }
 
 export type ManuallyAddUserDialogProps = {
   open: boolean
@@ -79,7 +77,9 @@ export function ManuallyAddUserDialog({
   const [timezone, setTimezone] = useState<string>(TIMEZONES[0])
   const [phone, setPhone] = useState("")
   const [externalPlayerId, setExternalPlayerId] = useState("")
-  const [tags, setTags] = useState<TagRow[]>(() => [newTagRow()])
+  const [tags, setTags] = useState<TagEntry[]>([])
+  const [tagKeyInput, setTagKeyInput] = useState("")
+  const [tagValueInput, setTagValueInput] = useState("")
 
   const tagListDescriptionId = `${formId}-tags-help`
 
@@ -89,7 +89,9 @@ export function ManuallyAddUserDialog({
     setTimezone(TIMEZONES[0])
     setPhone("")
     setExternalPlayerId("")
-    setTags([newTagRow()])
+    setTags([])
+    setTagKeyInput("")
+    setTagValueInput("")
   }
 
   function handleOpenChange(next: boolean) {
@@ -97,21 +99,20 @@ export function ManuallyAddUserDialog({
     if (!next) reset()
   }
 
-  function updateTag(id: string, field: "key" | "value", value: string) {
-    setTags((rows) =>
-      rows.map((row) => (row.id === id ? { ...row, [field]: value } : row))
-    )
+  function addTagFromInputs() {
+    const key = tagKeyInput.trim()
+    if (!key) return
+    const value = tagValueInput.trim()
+    setTags((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), key, value },
+    ])
+    setTagKeyInput("")
+    setTagValueInput("")
   }
 
-  function addTagRow() {
-    setTags((rows) => [...rows, newTagRow()])
-  }
-
-  function removeTagRow(id: string) {
-    setTags((rows) => {
-      const next = rows.filter((r) => r.id !== id)
-      return next.length ? next : [newTagRow()]
-    })
+  function removeTag(id: string) {
+    setTags((rows) => rows.filter((r) => r.id !== id))
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -236,60 +237,115 @@ export function ManuallyAddUserDialog({
                   </p>
                 </div>
 
+                {tags.length > 0 ? (
+                  <ul
+                    className="flex flex-wrap gap-2"
+                    role="list"
+                    aria-label="Added tags"
+                  >
+                    {tags.map((tag) => (
+                      <li key={tag.id}>
+                        <div
+                          className={cn(
+                            badgeVariants({ variant: "secondary" }),
+                            "inline-flex min-w-[40px] max-w-full items-center gap-1.5 rounded-lg px-2 py-1 pl-1.5 pr-1 text-xs font-normal"
+                          )}
+                        >
+                          <HugeiconsIcon
+                            icon={TagsIcon}
+                            strokeWidth={2}
+                            className="size-3.5 shrink-0 text-muted-foreground"
+                            aria-hidden
+                          />
+                          <span className="min-w-0 truncate font-medium">
+                            {tag.key}
+                          </span>
+                          <span
+                            className="text-muted-foreground"
+                            aria-hidden
+                          >
+                            :
+                          </span>
+                          <span className="min-w-0 truncate">
+                            {tag.value || "—"}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="size-5 shrink-0 text-muted-foreground hover:text-destructive"
+                            onClick={() => removeTag(tag.id)}
+                            aria-label={`Remove tag ${tag.key}`}
+                          >
+                            <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+
                 <div
-                  className="space-y-2"
                   role="group"
                   aria-describedby={tagListDescriptionId}
+                  className="space-y-2"
                 >
-                  {tags.map((row, index) => (
-                    <div
-                      key={row.id}
-                      className="flex flex-col gap-2 sm:flex-row sm:items-center"
-                    >
-                      <Input
-                        aria-label={`Tag key ${index + 1}`}
-                        value={row.key}
-                        onChange={(e) =>
-                          updateTag(row.id, "key", e.target.value)
-                        }
-                        placeholder="Key"
-                        className="sm:flex-1"
-                        autoComplete="off"
-                      />
-                      <Input
-                        aria-label={`Tag value ${index + 1}`}
-                        value={row.value}
-                        onChange={(e) =>
-                          updateTag(row.id, "value", e.target.value)
-                        }
-                        placeholder="Value"
-                        className="sm:flex-1"
-                        autoComplete="off"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="shrink-0 text-muted-foreground hover:text-destructive"
-                        onClick={() => removeTagRow(row.id)}
-                        aria-label={`Remove tag row ${index + 1}`}
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+                    <div className="grid flex-1 gap-1.5">
+                      <label
+                        htmlFor={`${formId}-tag-key`}
+                        className="text-muted-foreground text-xs font-medium"
                       >
-                        <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />
-                      </Button>
+                        Key
+                      </label>
+                      <Input
+                        id={`${formId}-tag-key`}
+                        value={tagKeyInput}
+                        onChange={(e) => setTagKeyInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault()
+                            addTagFromInputs()
+                          }
+                        }}
+                        placeholder="e.g. tier"
+                        autoComplete="off"
+                      />
                     </div>
-                  ))}
+                    <div className="grid flex-1 gap-1.5">
+                      <label
+                        htmlFor={`${formId}-tag-value`}
+                        className="text-muted-foreground text-xs font-medium"
+                      >
+                        Value
+                      </label>
+                      <Input
+                        id={`${formId}-tag-value`}
+                        value={tagValueInput}
+                        onChange={(e) => setTagValueInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault()
+                            addTagFromInputs()
+                          }
+                        }}
+                        placeholder="e.g. gold"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 sm:shrink-0"
+                      onClick={addTagFromInputs}
+                      disabled={!tagKeyInput.trim()}
+                    >
+                      <HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
+                      Add tag
+                    </Button>
+                  </div>
                 </div>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5"
-                  onClick={addTagRow}
-                >
-                  <HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
-                  Add tag
-                </Button>
               </div>
             </div>
           </div>
