@@ -9,6 +9,10 @@ import { ProfileSettings } from "./components"
 import NotificationSettingsPage from "./pages/notification/page"
 import ApiKeySettingsPage from "./pages/api-key/page"
 import AttributesSettingsPage from "./pages/attributes/page"
+import BillingSettingsPage from "./pages/billing/page"
+import BrandChannelsSettingsPage from "./pages/brand-channels/page"
+import IntegrationsSettingsPage from "./pages/integrations/page"
+import SecuritySettingsPage from "./pages/security/page"
 import WebhookSettingsPage from "./pages/webhook/page"
 
 function TabPlaceholder({
@@ -36,6 +40,7 @@ export default function SettingsPage() {
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
           <TabsTrigger value="api-key">API key</TabsTrigger>
+          <TabsTrigger value="brand-channels">Brand channels</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -59,18 +64,16 @@ export default function SettingsPage() {
           <ApiKeySettingsPage />
         </TabsContent>
 
+        <TabsContent value="brand-channels">
+          <BrandChannelsSettingsPage />
+        </TabsContent>
+
         <TabsContent value="billing">
-          <TabPlaceholder
-            title="Billing"
-            description="Plans, invoices, payment methods, and usage that affects your bill. Export statements and set billing contacts from here."
-          />
+          <BillingSettingsPage />
         </TabsContent>
 
         <TabsContent value="security">
-          <TabPlaceholder
-            title="Security"
-            description="SSO, MFA requirements, session policies, audit log retention, and break-glass access. Review compliance-related controls in one place."
-          />
+          <SecuritySettingsPage />
         </TabsContent>
 
         <TabsContent value="notifications">
@@ -78,10 +81,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="integrations">
-          <TabPlaceholder
-            title="Integrations"
-            description="Connect data warehouses, ad platforms, support tools, and CDPs. Manage OAuth apps and sync schedules for each integration."
-          />
+          <IntegrationsSettingsPage />
         </TabsContent>
 
         <TabsContent value="attributes">

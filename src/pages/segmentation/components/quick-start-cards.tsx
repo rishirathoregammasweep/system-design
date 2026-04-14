@@ -25,7 +25,7 @@ const quickStartCardsSegmentation = [
 
 export function QuickStartCards() {
   return (
-    <div className="mb-5 grid grid-cols-4 gap-5">
+    <div className="mb-5 grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 xs:grid-cols-1 gap-5">
       {quickStartCardsSegmentation.map((item) => (
         <Card key={item.id} size="default" className="gap-0 items-start justify-end py-3 rounded-none shadow-sm cursor-pointer">
           <CardContent className="flex items-start gap-3 px-4 py-0">

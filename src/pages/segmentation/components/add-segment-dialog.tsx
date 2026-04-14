@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useId, useState } from "react"
-import { Cancel01Icon } from "@hugeicons/core-free-icons"
+import { Cancel01Icon, } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
 import { Button } from "@/components/ui/button"
@@ -437,7 +437,8 @@ export function AddSegmentDialog() {
               >
                 Cancel
               </Button>
-              <Button type="submit">Create segment</Button>
+              <Button type="submit">
+                Create segment</Button>
             </DialogFooter>
           </form>
         </DialogContent>

@@ -29,6 +29,7 @@ import {
   BookOpen01Icon,
   CustomerService01Icon,
   HelpCircleIcon,
+  SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
 
 function HeaderHelpMenu() {
@@ -150,6 +151,26 @@ function HeaderAvatar() {
   )
 }
 
+function SidebarMenusOnSmallScreen() {
+  return (
+    <DropdownMenu>
+    <DropdownMenuTrigger>
+    <Button size={"icon-sm"} variant={"outline"}>
+      <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={2} />
+    </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="min-w-40" align="start">
+      {sidebarMenus.map((menu) => (
+        <DropdownMenuItem key={menu.path} className="cursor-pointer">
+            <HugeiconsIcon icon={menu.icon} strokeWidth={2} />
+            {menu.title}
+        </DropdownMenuItem>
+      ))}
+    </DropdownMenuContent>
+  </DropdownMenu>
+  )
+}
+
 function FooterAvatar() {
   const { theme, setTheme } = useTheme()
 
@@ -244,8 +265,8 @@ export function LayoutSidebar() {
   }, [pathname])
 
   return (
-    <div className="grid h-screen grid-cols-6 items-center bg-neutral-50/40 p-2 dark:bg-neutral-900/40">
-      <div className="col-span-1 flex h-full flex-col justify-between p-4">
+    <div className="grid h-screen grid-cols-6 items-center bg-neutral-50/40 p-0 md:p-2 dark:bg-neutral-900/40">
+      <div className="hidden md:col-span-1 md:flex md:h-full md:flex-col md:justify-between md:p-4">
         <div className="space-y-8">
           <div>
             <svg
@@ -310,10 +331,14 @@ export function LayoutSidebar() {
           <FooterAvatar />
         </div>
       </div>
-      <div className="col-span-5 flex h-full w-full min-h-0 flex-col overflow-hidden rounded-lg bg-white dark:bg-neutral-900 shadow">
+      <div className="col-span-6 flex h-full w-full min-h-0 flex-col overflow-hidden rounded-none bg-white dark:bg-neutral-900 md:col-span-5 md:rounded-lg md:shadow">
         <div className="min-h-0 flex-1 overflow-auto">
           {pathname !== "/create-journey" ? (
             <header className="flex items-start justify-between gap-6 px-8 py-6">
+              <div className="flex items-start gap-2">
+                <span className="md:hidden">
+                  <SidebarMenusOnSmallScreen />
+                </span>
               <div className="min-w-0 space-y-1">
                 <h1 className="scroll-m-20 text-2xl font-semibold tracking-tight">
                   {pageMeta.heading}
@@ -323,6 +348,7 @@ export function LayoutSidebar() {
                     {pageMeta.description}
                   </p>
                 ) : null}
+              </div>
               </div>
               <div className="flex shrink-0 items-center gap-1 pt-0.5">
                 <HeaderHelpMenu />
