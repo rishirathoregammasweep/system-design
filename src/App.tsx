@@ -15,7 +15,6 @@ import EventsPage from "@/pages/events/page"
 import CreateJourneyPage from "@/pages/journeys/create/page"
 import JourneysPage from "@/pages/journeys/page"
 import PlayerPage from "@/pages/player/page"
-import SearchPage from "@/pages/search/page"
 import SegmentationPage from "@/pages/segmentation/page"
 import NotFoundPage from "@/pages/not-found/page"
 import SettingsLayout from "@/pages/settings/settings-layout"
@@ -54,7 +53,6 @@ const routeElements: Partial<
   "/campaigns": <CampaignPage />,
   "/journeys": <JourneysPage />,
   "/triggers": <TriggersPage />,
-  "/search": <SearchPage />,
   "/api": <ApiPage />,
   "/templates": <TemplatesPage />,
 }

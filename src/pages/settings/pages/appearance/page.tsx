@@ -107,7 +107,7 @@ function ThemePreviewSystem({ selected }: { selected: boolean }) {
 export default function AppearanceSettingsPage() {
 
   return (
-    <div className="mx-0 max-w-4xl space-y-10 pb-12">
+    <div className="mx-0 max-w-xl space-y-10 pb-12">
       <section className="space-y-4">
         <div className="space-y-1">
           <h2 className="text-sm font-medium">Language</h2>

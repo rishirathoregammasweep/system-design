@@ -79,13 +79,6 @@ export const sidebarMenus = [
     description: "Configure automation triggers and notifications.",
   },
   {
-    title: "Search",
-    icon: Search,
-    path: "/search",
-    heading: "Search",
-    description: "Find content, records, and resources across the app.",
-  },
-  {
     title: "API",
     icon: AppleIntelligenceIcon,
     path: "/api",

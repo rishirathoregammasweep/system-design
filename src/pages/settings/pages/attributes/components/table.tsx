@@ -78,9 +78,6 @@ export function AttributesTable() {
               <TableHead className="h-9 py-2">Display name</TableHead>
               <TableHead className="h-9 py-2">Field key</TableHead>
               <TableHead className="h-9 py-2">Type</TableHead>
-              <TableHead className="h-9 py-2">PII</TableHead>
-              <TableHead className="h-9 py-2">Segment filter</TableHead>
-              <TableHead className="h-9 py-2">Created</TableHead>
               <TableHead className="h-9 py-2">Owner</TableHead>
               <TableHead className="h-9 py-2">Status</TableHead>
             </TableRow>
@@ -94,9 +91,6 @@ export function AttributesTable() {
                 <TableCell className="py-2 font-medium">{row.label}</TableCell>
                 <TableCell className="py-2 font-mono text-xs">{row.key}</TableCell>
                 <TableCell className="py-2">{row.type}</TableCell>
-                <TableCell className="py-2">{row.pii}</TableCell>
-                <TableCell className="py-2">{row.segmentFilter}</TableCell>
-                <TableCell className="py-2">{row.created}</TableCell>
                 <TableCell className="py-2">{row.owner}</TableCell>
                 <TableCell className="py-2">{row.status}</TableCell>
               </TableRow>

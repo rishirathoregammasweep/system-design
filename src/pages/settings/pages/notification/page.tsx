@@ -72,7 +72,7 @@ export default function NotificationSettingsPage() {
     setPrefs((p) => ({ ...p, [key]: v }))
 
   return (
-    <div className="space-y-8 mx-start max-w-5xl">
+    <div className="space-y-8 mx-start max-w-xl">
       <div className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">Notifications</h2>
         <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">

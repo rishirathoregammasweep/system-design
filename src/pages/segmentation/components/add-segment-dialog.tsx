@@ -428,7 +428,6 @@ export function AddSegmentDialog() {
                 )}
               </div>
             </div>
-
             <DialogFooter className="border-border shrink-0 border-t px-6 py-4">
               <Button
                 type="button"

@@ -95,8 +95,6 @@ export function WebhookTable() {
               <TableHead className="h-9 py-2">Name</TableHead>
               <TableHead className="h-9 py-2">Endpoint</TableHead>
               <TableHead className="h-9 py-2">Events</TableHead>
-              <TableHead className="h-9 py-2">Status</TableHead>
-              <TableHead className="h-9 py-2">Last delivery</TableHead>
               <TableHead className="h-9 py-2">Created</TableHead>
             </TableRow>
           </TableHeader>
@@ -111,8 +109,6 @@ export function WebhookTable() {
                   {row.url}
                 </TableCell>
                 <TableCell className="py-2 font-mono text-xs">{row.events}</TableCell>
-                <TableCell className="py-2">{row.status}</TableCell>
-                <TableCell className="py-2">{row.lastDelivery}</TableCell>
                 <TableCell className="py-2">{row.created}</TableCell>
               </TableRow>
             ))}

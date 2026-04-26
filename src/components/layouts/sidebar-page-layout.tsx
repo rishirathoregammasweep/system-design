@@ -27,14 +27,14 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { sidebarMenus } from "@/components/layouts/sidebar-menus"
 import {
-  ArrowLeft01Icon,
   BookOpen01Icon,
+  CancelIcon,
   CustomerService01Icon,
   HelpCircleIcon,
-  RemoveIcon,
   SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"
+import { CardTitle } from "../ui/card"
 
 function HeaderHelpMenu() {
   return (
@@ -341,9 +341,9 @@ export function LayoutSidebar() {
                   }
                 >
                   <HugeiconsIcon strokeWidth={1.5} icon={menu.icon} />
-                  <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
+                  <CardTitle className="scroll-m-20 text-md font-semibold tracking-tight">
                     {menu.title}
-                  </h4>
+                  </CardTitle>
                 </NavLink>
               ))}
             </nav>
@@ -353,12 +353,12 @@ export function LayoutSidebar() {
           </div>
         </div>
       ) : (
-        <div className="bg-muted/30 hidden md:col-span-2 md:flex md:h-full md:w-full md:flex-col md:items-end md:justify-between md:border-e md:border-border md:px-4 md:py-6 dark:bg-muted/10">
+        <div className="bg-muted/30 hidden md:col-span-2 md:flex md:h-full md:w-full md:flex-col md:items-end md:justify-between md:px-4 md:py-6 dark:bg-muted/10">
           <div className="ms-auto flex h-full w-max min-w-0 max-w-full flex-col justify-between">
             <div className="space-y-8">
               <Button variant="secondary" size="sm" className="gap-2" asChild>
                 <NavLink to="/dashboard">
-                  <HugeiconsIcon icon={RemoveIcon} strokeWidth={2} />
+                  <HugeiconsIcon icon={CancelIcon} strokeWidth={2} />
                   Exit settings
                 </NavLink>
               </Button>
@@ -376,9 +376,9 @@ export function LayoutSidebar() {
                 }
               >
                 <HugeiconsIcon strokeWidth={1.5} size={20} icon={menu.icon} />
-                <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
+                <CardTitle className="scroll-m-20 text-sm font-semibold tracking-tight">
                   {menu.title}
-                </h4>
+                </CardTitle>
               </NavLink>
               ))}
               </nav>

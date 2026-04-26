@@ -30,7 +30,7 @@ export default function BrandChannelsSettingsPage() {
   }
 
   return (
-    <div className="mx-start max-w-5xl space-y-6">
+    <div className="mx-start max-w-xl space-y-6">
       <div className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">Brand channels</h2>
         <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">

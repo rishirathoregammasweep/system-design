@@ -133,7 +133,7 @@ export default function ProfileSettings() {
   )
 
   return (
-    <div className="mx-0 max-w-4xl space-y-0 pb-12">
+    <div className="mx-0 max-w-xl space-y-0 pb-12">
       <Breadcrumb />
 
       <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
@@ -244,53 +244,6 @@ export default function ProfileSettings() {
               className="cursor-default px-3 py-2"
               aria-readonly
             />
-        </section>
-
-        <Separator />
-
-        <section className="space-y-4">
-          <FieldHeading
-            title="Two Factor Authentication"
-            description="Enhances security by requiring a code along with your password"
-          />
-          <Card className="shadow-none">
-            <CardContent className="p-0">
-              <button
-                type="button"
-                className="hover:bg-muted/50 flex w-full items-center gap-4 rounded-lg border border-border px-4 py-3.5 text-left transition-colors"
-                onClick={() => setTwoFactorEnabled((v) => !v)}
-              >
-                <div className="bg-muted flex size-10 shrink-0 items-center justify-center rounded-md">
-                  <HugeiconsIcon
-                    icon={SecurityIcon}
-                    strokeWidth={1.5}
-                    className="text-foreground size-5"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">Authenticator App</p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  {twoFactorEnabled ? (
-                    <span className="text-emerald-600 flex items-center gap-2 text-sm">
-                      <span className="size-1.5 shrink-0 rounded-full bg-emerald-600" />
-                      Active
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground flex items-center gap-2 text-sm">
-                      <span className="bg-muted-foreground/50 size-1.5 shrink-0 rounded-full" />
-                      Deactivated
-                    </span>
-                  )}
-                  <HugeiconsIcon
-                    icon={ArrowRight01Icon}
-                    strokeWidth={2}
-                    className="text-muted-foreground size-4"
-                  />
-                </div>
-              </button>
-            </CardContent>
-          </Card>
         </section>
 
         <Separator />

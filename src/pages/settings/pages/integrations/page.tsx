@@ -117,7 +117,7 @@ function IntegrationRow({
 
 export default function IntegrationsSettingsPage() {
   return (
-    <div className="mx-start max-w-5xl space-y-8">
+    <div className="mx-start max-w-xl space-y-8">
       <div className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">Integrations</h2>
         <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
