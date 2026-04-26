@@ -24,13 +24,17 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { sidebarMenus } from "@/components/layouts/sidebar-menus"
 import {
+  ArrowLeft01Icon,
   BookOpen01Icon,
   CustomerService01Icon,
   HelpCircleIcon,
+  RemoveIcon,
   SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
+import { settingsSidebarMenu } from "./setting-sidebar-menus"
 
 function HeaderHelpMenu() {
   return (
@@ -257,6 +261,13 @@ export function LayoutSidebar() {
           "Define a name, subject line, and HTML body for your email template.",
       }
     }
+    const settingsItem = settingsSidebarMenu.find((m) => m.path === pathname)
+    if (settingsItem) {
+      return {
+        heading: settingsItem.heading,
+        description: settingsItem.description,
+      }
+    }
     const item = sidebarMenus.find((m) => m.path === pathname)
     if (item) {
       return { heading: item.heading, description: item.description }
@@ -264,74 +275,127 @@ export function LayoutSidebar() {
     return { heading: "Page", description: "" }
   }, [pathname])
 
+  const isSettings = pathname.startsWith("/settings")
+
   return (
-    <div className="grid h-screen grid-cols-6 items-center bg-neutral-50/40 p-0 md:p-2 dark:bg-neutral-900/40">
-      <div className="hidden md:col-span-1 md:flex md:h-full md:flex-col md:justify-between md:p-4">
-        <div className="space-y-8">
-          <div>
-            <svg
-              fill="none"
-              height="48"
-              viewBox="0 0 35 48"
-              width="35"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clipRule="evenodd" fill="#2563eb" fillRule="evenodd">
-                <path d="m34.6416 14v8.0492h-9.9697v-2.2927z" />
-                <path
-                  d="m34.6394 14.0001-9.9697 5.7565-7.3513-4.2436v-11.513z"
-                  opacity=".9"
-                />
-                <path
-                  d="m17.3207 4v11.513l-7.34902 4.2436-9.96972688-5.7565z"
-                  opacity=".8"
-                />
-                <path
-                  d="m9.96973 19.7565v8.4868l-9.96973 5.756v-19.9993z"
-                  opacity=".7"
-                />
-                <path
-                  d="m17.3187 32.4871v11.5129l-17.3187-10.0006 9.96973-5.756z"
-                  opacity=".6"
-                />
-                <path
-                  d="m34.6394 33.9994-17.321 10.0006v-11.5129l7.3513-4.2437z"
-                  opacity=".5"
-                />
-                <path
-                  d="m34.6416 25.9507v8.0487l-9.9697-5.756v-2.2927z"
-                  opacity=".4"
-                />
-              </g>
-            </svg>
+    <div
+      className={cn(
+        "grid h-screen items-stretch bg-neutral-50/40 p-0 md:items-center md:p-2 dark:bg-neutral-900/40",
+        isSettings ? "grid-cols-1 md:grid-cols-6" : "grid-cols-1 md:grid-cols-6"
+      )}
+    >
+      {!isSettings ? (
+        <div className="hidden w-max md:col-span-1 md:flex md:h-full md:flex-col md:justify-between md:p-4">
+          <div className="space-y-8">
+            <div>
+              <svg
+                fill="none"
+                height="48"
+                viewBox="0 0 35 48"
+                width="35"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clipRule="evenodd" fill="#2563eb" fillRule="evenodd">
+                  <path d="m34.6416 14v8.0492h-9.9697v-2.2927z" />
+                  <path
+                    d="m34.6394 14.0001-9.9697 5.7565-7.3513-4.2436v-11.513z"
+                    opacity=".9"
+                  />
+                  <path
+                    d="m17.3207 4v11.513l-7.34902 4.2436-9.96972688-5.7565z"
+                    opacity=".8"
+                  />
+                  <path
+                    d="m9.96973 19.7565v8.4868l-9.96973 5.756v-19.9993z"
+                    opacity=".7"
+                  />
+                  <path
+                    d="m17.3187 32.4871v11.5129l-17.3187-10.0006 9.96973-5.756z"
+                    opacity=".6"
+                  />
+                  <path
+                    d="m34.6394 33.9994-17.321 10.0006v-11.5129l7.3513-4.2437z"
+                    opacity=".5"
+                  />
+                  <path
+                    d="m34.6416 25.9507v8.0487l-9.9697-5.756v-2.2927z"
+                    opacity=".4"
+                  />
+                </g>
+              </svg>
+            </div>
+            <nav className="space-y-4">
+              {sidebarMenus.map((menu) => (
+                <NavLink
+                  key={menu.path}
+                  to={menu.path}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0",
+                      isActive ||
+                        (menu.path === "/settings" &&
+                          pathname.startsWith("/settings"))
+                        ? "opacity-100"
+                        : "opacity-50 hover:opacity-100"
+                    )
+                  }
+                >
+                  <HugeiconsIcon strokeWidth={1.5} icon={menu.icon} />
+                  <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
+                    {menu.title}
+                  </h4>
+                </NavLink>
+              ))}
+            </nav>
           </div>
-          <nav className="space-y-4">
-            {sidebarMenus.map((menu) => (
-              <NavLink
+          <div className="flex items-center gap-2">
+            <FooterAvatar />
+          </div>
+        </div>
+      ) : (
+        <div className="bg-muted/30 hidden md:col-span-2 md:flex md:h-full md:w-full md:flex-col md:items-end md:justify-between md:border-e md:border-border md:px-4 md:py-6 dark:bg-muted/10">
+          <div className="ms-auto flex h-full w-max min-w-0 max-w-full flex-col justify-between">
+            <div className="space-y-8">
+              <Button variant="secondary" size="sm" className="gap-2" asChild>
+                <NavLink to="/dashboard">
+                  <HugeiconsIcon icon={RemoveIcon} strokeWidth={2} />
+                  Exit settings
+                </NavLink>
+              </Button>
+              <nav className="space-y-3" aria-label="Settings sections">
+                {settingsSidebarMenu.map((menu) => (
+                <NavLink
                 key={menu.path}
                 to={menu.path}
                 className={({ isActive }) =>
-                  [
-                    "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0  ",
-                    isActive
-                      ? "opacity-100"
-                      : "opacity-50 hover:opacity-100",
-                  ].join(" ")
+                  cn(
+                    "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0",
+                    isActive ? "opacity-100"
+                      : "opacity-50 hover:opacity-100"
+                  )
                 }
               >
-                <HugeiconsIcon strokeWidth={1.5} icon={menu.icon} />
+                <HugeiconsIcon strokeWidth={1.5} size={20} icon={menu.icon} />
                 <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
                   {menu.title}
                 </h4>
               </NavLink>
-            ))}
-          </nav>
+              ))}
+              </nav>
+            </div>
+            <div className="flex items-center gap-2 self-end">
+              <FooterAvatar />
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <FooterAvatar />
-        </div>
-      </div>
-      <div className="col-span-6 flex h-full w-full min-h-0 flex-col overflow-hidden rounded-none bg-white dark:bg-neutral-900 md:col-span-5 md:rounded-lg md:shadow">
+      )}
+
+      <div
+        className={cn(
+          "col-span-6 flex h-full min-h-0 w-full flex-col overflow-hidden rounded-none bg-white dark:bg-neutral-900 md:rounded-lg md:shadow",
+          isSettings ? "md:col-span-4" : "md:col-span-5"
+        )}
+      >
         <div className="min-h-0 flex-1 overflow-auto">
           {pathname !== "/create-journey" ? (
             <header className="flex items-start justify-between gap-6 px-8 py-6">
@@ -339,16 +403,16 @@ export function LayoutSidebar() {
                 <span className="md:hidden">
                   <SidebarMenusOnSmallScreen />
                 </span>
-              <div className="min-w-0 space-y-1">
-                <h1 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-                  {pageMeta.heading}
-                </h1>
-                {pageMeta.description ? (
-                  <p className="text-muted-foreground text-md dark:text-muted-foreground leading-7 ">
-                    {pageMeta.description}
-                  </p>
-                ) : null}
-              </div>
+                <div className="min-w-0 space-y-1">
+                  <h1 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                    {pageMeta.heading}
+                  </h1>
+                  {pageMeta.description ? (
+                    <p className="text-muted-foreground text-md dark:text-muted-foreground leading-7 ">
+                      {pageMeta.description}
+                    </p>
+                  ) : null}
+                </div>
               </div>
               <div className="flex shrink-0 items-center gap-1 pt-0.5">
                 <HeaderHelpMenu />

@@ -1,4 +1,5 @@
-import { useCallback, useState, type ReactNode } from "react"
+import { useCallback, useRef, useState } from "react"
+import { Link } from "react-router-dom"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -12,554 +13,416 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Tick02Icon } from "@hugeicons/core-free-icons"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group"
+import { Separator } from "@/components/ui/separator"
+import {
+  ArrowRight01Icon,
+  PencilEdit02Icon,
+  SecurityIcon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-type SectionId =
-  | "profileUrl"
-  | "photo"
-  | "fullName"
-  | "emails"
-  | "taxId"
-  | "address"
-  | "xero"
-
-function ProfileSection({
+function FieldHeading({
   title,
   description,
-  children,
-  action,
 }: {
   title: string
   description?: string
-  children: ReactNode
-  action: ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-4 border-b border-border py-6 last:border-b-0 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-      <div className="min-w-0 shrink-0 sm:max-w-xs">
-        <p className="text-sm font-medium">{title}</p>
-        {description ? (
-          <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            {description}
-          </p>
-        ) : null}
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-6">
-        <div className="min-w-0 flex-1 text-sm sm:text-end">{children}</div>
-        <div className="shrink-0 sm:w-20 sm:text-end">{action}</div>
-      </div>
+    <div className="space-y-1">
+      <h2 className="text-sm font-medium">{title}</h2>
+      {description ? (
+        <p className="text-muted-foreground text-sm leading-relaxed">
+          {description}
+        </p>
+      ) : null}
     </div>
   )
 }
 
+function Breadcrumb() {
+  return (
+    <nav
+      aria-label="Breadcrumb"
+      className="text-muted-foreground mb-6 flex flex-wrap items-center gap-1.5 text-sm"
+    >
+      <Link
+        to="/settings/profile"
+        className="hover:text-foreground transition-colors"
+      >
+        User
+      </Link>
+      <span aria-hidden className="text-muted-foreground/80">
+        /
+      </span>
+      <span className="text-foreground font-medium">Profile</span>
+    </nav>
+  )
+}
+
 export default function ProfileSettings() {
-  const [open, setOpen] = useState<SectionId | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [profileUrl, setProfileUrl] = useState("untitledui.com/caitlyn")
+  const [firstName, setFirstName] = useState("Rishi")
+  const [lastName, setLastName] = useState("Rathore")
+  const [email, setEmail] = useState("rishi.idealtechno@gmail.com")
   const [photoUrl, setPhotoUrl] = useState("https://github.com/shadcn.png")
-  const [fullName, setFullName] = useState("Caitlyn Edwards")
-  const [emails, setEmails] = useState([
-    "caitlyn@untitledui.com",
-    "c.edwards@gmail.com",
-  ])
-  const [taxId, setTaxId] = useState("65 655 466 729")
-  const [address, setAddress] = useState(
-    "100 Smith Street, Collingwood VIC 3066, AUSTRALIA"
-  )
-  const [xeroEmail, setXeroEmail] = useState("hello@untitledui.com")
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
 
-  const [draftProfileUrl, setDraftProfileUrl] = useState(profileUrl)
+  const [photoDialogOpen, setPhotoDialogOpen] = useState(false)
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [draftPhotoUrl, setDraftPhotoUrl] = useState(photoUrl)
-  const [draftFullName, setDraftFullName] = useState(fullName)
-  const [draftEmails, setDraftEmails] = useState(emails.join("\n"))
-  const [draftTaxId, setDraftTaxId] = useState(taxId)
-  const [draftAddress, setDraftAddress] = useState(address)
-  const [draftXeroEmail, setDraftXeroEmail] = useState(xeroEmail)
+  const [draftEmail, setDraftEmail] = useState(email)
 
-  const beginEdit = useCallback(
-    (id: SectionId) => {
-      setDraftProfileUrl(profileUrl)
-      setDraftPhotoUrl(photoUrl)
-      setDraftFullName(fullName)
-      setDraftEmails(emails.join("\n"))
-      setDraftTaxId(taxId)
-      setDraftAddress(address)
-      setDraftXeroEmail(xeroEmail)
-      setOpen(id)
+  const initials = [firstName, lastName]
+    .map((p) => p.trim()[0])
+    .filter(Boolean)
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+
+  const openPhotoDialog = useCallback(() => {
+    setDraftPhotoUrl(photoUrl)
+    setPhotoDialogOpen(true)
+  }, [photoUrl])
+
+  const savePhotoUrl = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      const next = draftPhotoUrl.trim()
+      if (next) setPhotoUrl(next)
+      setPhotoDialogOpen(false)
     },
-    [address, emails, fullName, photoUrl, profileUrl, taxId, xeroEmail]
+    [draftPhotoUrl]
   )
 
-  function handleOpenChange(next: boolean) {
-    if (!next) setOpen(null)
-  }
-
-  function saveProfileUrl(e: React.FormEvent) {
-    e.preventDefault()
-    setProfileUrl(draftProfileUrl.trim())
-    setOpen(null)
-  }
-
-  function savePhoto(e: React.FormEvent) {
-    e.preventDefault()
-    const next = draftPhotoUrl.trim()
-    if (next) setPhotoUrl(next)
-    setOpen(null)
-  }
-
-  function clearPhoto() {
+  const removePhoto = useCallback(() => {
     setPhotoUrl("")
-    setDraftPhotoUrl("")
-  }
+  }, [])
 
-  function saveFullName(e: React.FormEvent) {
-    e.preventDefault()
-    setFullName(draftFullName.trim())
-    setOpen(null)
-  }
+  const onFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+      const url = URL.createObjectURL(file)
+      setPhotoUrl(url)
+      e.target.value = ""
+    },
+    []
+  )
 
-  function saveEmails(e: React.FormEvent) {
-    e.preventDefault()
-    const parsed = draftEmails
-      .split(/[\n,]+/)
-      .map((s) => s.trim())
-      .filter(Boolean)
-    setEmails(parsed.length ? parsed : emails)
-    setOpen(null)
-  }
+  const openEmailDialog = useCallback(() => {
+    setDraftEmail(email)
+    setEmailDialogOpen(true)
+  }, [email])
 
-  function saveTaxId(e: React.FormEvent) {
-    e.preventDefault()
-    setTaxId(draftTaxId.trim())
-    setOpen(null)
-  }
-
-  function saveAddress(e: React.FormEvent) {
-    e.preventDefault()
-    setAddress(draftAddress.trim())
-    setOpen(null)
-  }
-
-  function saveXero(e: React.FormEvent) {
-    e.preventDefault()
-    setXeroEmail(draftXeroEmail.trim())
-    setOpen(null)
-  }
+  const saveEmail = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      setEmail(draftEmail.trim())
+      setEmailDialogOpen(false)
+    },
+    [draftEmail]
+  )
 
   return (
-    <>
-      <Card className="rounded-none shadow-none ring-0 mx-start !p-0 max-w-5xl">
-        <CardContent className="px-0">
-          <div className="">
-            <ProfileSection
-              title="Profile"
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("profileUrl")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              <span className="text-foreground break-all">{profileUrl}</span>
-            </ProfileSection>
+    <div className="mx-0 max-w-4xl space-y-0 pb-12">
+      <Breadcrumb />
 
-            <ProfileSection
-              title="Photo"
-              description="This will be displayed on your profile."
-              action={
-                <div className="flex flex-wrap items-center justify-end gap-2 sm:justify-end">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="text-destructive hover:text-destructive"
-                    onClick={clearPhoto}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => beginEdit("photo")}
-                  >
-                    Upload
-                  </Button>
-                </div>
-              }
-            >
-              <Avatar size="lg" className="size-14">
-                {photoUrl ? (
-                  <AvatarImage src={photoUrl} alt="" />
-                ) : null}
-                <AvatarFallback className="text-lg">
-                  {fullName
-                    .split(/\s+/)
-                    .map((p) => p[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </ProfileSection>
+      <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
 
-            <ProfileSection
-              title="Full name"
-              description="This will be displayed on your profile."
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("fullName")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              {fullName}
-            </ProfileSection>
-
-            <ProfileSection
-              title="Contact email"
-              description="Add at least one contact email."
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("emails")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              <ul className="space-y-1 text-end sm:text-end">
-                {emails.map((m) => (
-                  <li key={m} className="break-all">
-                    {m}
-                  </li>
-                ))}
-              </ul>
-            </ProfileSection>
-
-            <ProfileSection
-              title="Business tax ID"
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("taxId")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              <span className="inline-flex items-center gap-2">
-                {taxId}
-                <HugeiconsIcon
-                  icon={Tick02Icon}
-                  className="text-primary size-4 shrink-0"
-                  strokeWidth={2}
+      <div className="mt-8 space-y-10">
+        <section className="space-y-4">
+          <FieldHeading title="Picture" />
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <Avatar className="size-20 shrink-0 rounded-md after:rounded-md">
+              {photoUrl ? (
+                <AvatarImage
+                  src={photoUrl}
+                  alt=""
+                  className="rounded-md object-cover"
                 />
-              </span>
-            </ProfileSection>
-
-            <ProfileSection
-              title="Business address"
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("address")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              <span className="whitespace-pre-wrap">{address}</span>
-            </ProfileSection>
-
-            <ProfileSection
-              title="Full name"
-              description="This will be displayed on your profile."
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("fullName")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              {fullName}
-            </ProfileSection>
-
-            <ProfileSection
-              title="Contact email"
-              description="Add at least one contact email."
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("emails")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              <ul className="space-y-1 text-end sm:text-end">
-                {emails.map((m) => (
-                  <li key={m} className="break-all">
-                    {m}
-                  </li>
-                ))}
-              </ul>
-            </ProfileSection>
-
-            <ProfileSection
-              title="Business tax ID"
-              action={
-                <Button
-                  type="button"
-                  variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("taxId")}
-                >
-                  Edit
-                </Button>
-              }
-            >
-              <span className="inline-flex items-center gap-2">
-                {taxId}
-                <HugeiconsIcon
-                  icon={Tick02Icon}
-                  className="text-primary size-4 shrink-0"
-                  strokeWidth={2}
+              ) : null}
+              <AvatarFallback className="rounded-md text-lg font-medium">
+                {initials || "?"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/gif"
+                  className="sr-only"
+                  onChange={onFileChange}
                 />
-              </span>
-            </ProfileSection>
-
-            <ProfileSection
-              title="Business address"
-              action={
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  Upload
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-destructive"
+                  onClick={removePhoto}
+                  disabled={!photoUrl}
+                >
+                  Remove
+                </Button>
                 <Button
                   type="button"
                   variant="link"
-                  className="text-primary h-auto p-0"
-                  onClick={() => beginEdit("address")}
+                  size="sm"
+                  className="text-muted-foreground h-auto px-2"
+                  onClick={openPhotoDialog}
                 >
-                  Edit
+                  Paste URL
                 </Button>
-              }
-            >
-              <span className="whitespace-pre-wrap">{address}</span>
-            </ProfileSection>
+              </div>
+              <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
+                We support your square PNGs, JPGs and GIFs under 10MB.
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </section>
 
-      <Dialog open={open !== null} onOpenChange={handleOpenChange}>
-        <DialogContent
-          key={open ?? "closed"}
-          className="sm:max-w-md"
-        >
-          {open === "profileUrl" ? (
-            <form onSubmit={saveProfileUrl}>
-              <DialogHeader>
-                <DialogTitle>Edit profile URL</DialogTitle>
-                <DialogDescription>
-                  Public path for your workspace profile.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="profile-url" className="text-sm font-medium">
-                  Profile URL
-                </label>
-                <Input
-                  id="profile-url"
-                  value={draftProfileUrl}
-                  onChange={(e) => setDraftProfileUrl(e.target.value)}
-                  placeholder="example.com/your-slug"
-                  autoComplete="off"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <Separator />
 
-          {open === "photo" ? (
-            <form onSubmit={savePhoto}>
-              <DialogHeader>
-                <DialogTitle>Profile photo</DialogTitle>
-                <DialogDescription>
-                  Paste an image URL. You can replace this with file upload
-                  when your backend is ready.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="photo-url" className="text-sm font-medium">
-                  Image URL
-                </label>
-                <Input
-                  id="photo-url"
-                  value={draftPhotoUrl}
-                  onChange={(e) => setDraftPhotoUrl(e.target.value)}
-                  placeholder="https://"
-                  type="url"
-                  autoComplete="off"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <section className="space-y-4">
+          <FieldHeading
+            title="Name"
+            description="Your name as it will be displayed"
+          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label htmlFor="profile-first-name" className="text-sm font-medium">
+                First name
+              </label>
+              <Input
+                id="profile-first-name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                autoComplete="given-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="profile-last-name" className="text-sm font-medium">
+                Last name
+              </label>
+              <Input
+                id="profile-last-name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                autoComplete="family-name"
+              />
+            </div>
+          </div>
+        </section>
 
-          {open === "fullName" ? (
-            <form onSubmit={saveFullName}>
-              <DialogHeader>
-                <DialogTitle>Edit full name</DialogTitle>
-                <DialogDescription>
-                  Shown on your profile and in account emails.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="full-name" className="text-sm font-medium">
-                  Full name
-                </label>
-                <Input
-                  id="full-name"
-                  value={draftFullName}
-                  onChange={(e) => setDraftFullName(e.target.value)}
-                  autoComplete="name"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <Separator />
 
-          {open === "emails" ? (
-            <form onSubmit={saveEmails}>
-              <DialogHeader>
-                <DialogTitle>Contact emails</DialogTitle>
-                <DialogDescription>
-                  One address per line, or separate with commas.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="emails" className="text-sm font-medium">
-                  Email addresses
-                </label>
-                <Textarea
-                  id="emails"
-                  value={draftEmails}
-                  onChange={(e) => setDraftEmails(e.target.value)}
-                  rows={4}
-                  className="min-h-[100px] resize-y"
-                  placeholder="you@company.com"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <section className="space-y-4">
+          <FieldHeading
+            title="Email"
+            description="The email associated to your account"
+          />
+            <Input
+              readOnly
+              value={email}
+              className="cursor-default px-3 py-2"
+              aria-readonly
+            />
+        </section>
 
-          {open === "taxId" ? (
-            <form onSubmit={saveTaxId}>
-              <DialogHeader>
-                <DialogTitle>Business tax ID</DialogTitle>
-                <DialogDescription>
-                  Used on invoices and tax documents.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="tax-id" className="text-sm font-medium">
-                  Tax ID
-                </label>
-                <Input
-                  id="tax-id"
-                  value={draftTaxId}
-                  onChange={(e) => setDraftTaxId(e.target.value)}
-                  autoComplete="off"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <Separator />
 
-          {open === "address" ? (
-            <form onSubmit={saveAddress}>
-              <DialogHeader>
-                <DialogTitle>Business address</DialogTitle>
-                <DialogDescription>
-                  Legal or primary business address for billing and compliance.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="address" className="text-sm font-medium">
-                  Address
-                </label>
-                <Textarea
-                  id="address"
-                  value={draftAddress}
-                  onChange={(e) => setDraftAddress(e.target.value)}
-                  rows={4}
-                  className="min-h-[100px] resize-y"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <section className="space-y-4">
+          <FieldHeading
+            title="Two Factor Authentication"
+            description="Enhances security by requiring a code along with your password"
+          />
+          <Card className="shadow-none">
+            <CardContent className="p-0">
+              <button
+                type="button"
+                className="hover:bg-muted/50 flex w-full items-center gap-4 rounded-lg border border-border px-4 py-3.5 text-left transition-colors"
+                onClick={() => setTwoFactorEnabled((v) => !v)}
+              >
+                <div className="bg-muted flex size-10 shrink-0 items-center justify-center rounded-md">
+                  <HugeiconsIcon
+                    icon={SecurityIcon}
+                    strokeWidth={1.5}
+                    className="text-foreground size-5"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium">Authenticator App</p>
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  {twoFactorEnabled ? (
+                    <span className="text-emerald-600 flex items-center gap-2 text-sm">
+                      <span className="size-1.5 shrink-0 rounded-full bg-emerald-600" />
+                      Active
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground flex items-center gap-2 text-sm">
+                      <span className="bg-muted-foreground/50 size-1.5 shrink-0 rounded-full" />
+                      Deactivated
+                    </span>
+                  )}
+                  <HugeiconsIcon
+                    icon={ArrowRight01Icon}
+                    strokeWidth={2}
+                    className="text-muted-foreground size-4"
+                  />
+                </div>
+              </button>
+            </CardContent>
+          </Card>
+        </section>
 
-          {open === "xero" ? (
-            <form onSubmit={saveXero}>
-              <DialogHeader>
-                <DialogTitle>Xero integration</DialogTitle>
-                <DialogDescription>
-                  Connected account email. Use your Xero dashboard for full
-                  connection settings.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-2 py-2">
-                <label htmlFor="xero-email" className="text-sm font-medium">
-                  Connected email
-                </label>
-                <Input
-                  id="xero-email"
-                  type="email"
-                  value={draftXeroEmail}
-                  onChange={(e) => setDraftXeroEmail(e.target.value)}
-                  autoComplete="email"
-                />
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save</Button>
-              </DialogFooter>
-            </form>
-          ) : null}
+        <Separator />
+
+        <section className="space-y-4">
+          <FieldHeading
+            title="Set Password"
+            description="Receive an email containing password set link"
+          />
+          <Button type="button" variant="outline" size="sm">
+            Set password
+          </Button>
+        </section>
+
+        <Separator />
+
+        <section className="space-y-4">
+          <FieldHeading
+            title="Danger zone"
+            description="Delete account and all the associated data"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border-destructive/50 text-destructive hover:bg-destructive/5 hover:text-destructive"
+            onClick={() => setDeleteDialogOpen(true)}
+          >
+            Delete account
+          </Button>
+        </section>
+      </div>
+
+      <Dialog open={photoDialogOpen} onOpenChange={setPhotoDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <form onSubmit={savePhotoUrl}>
+            <DialogHeader>
+              <DialogTitle>Profile picture URL</DialogTitle>
+              <DialogDescription>
+                Paste a direct link to an image. For file uploads, use Upload
+                on the main form.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-2 py-2">
+              <label htmlFor="profile-photo-url" className="text-sm font-medium">
+                Image URL
+              </label>
+              <Input
+                id="profile-photo-url"
+                value={draftPhotoUrl}
+                onChange={(e) => setDraftPhotoUrl(e.target.value)}
+                placeholder="https://"
+                type="url"
+                autoComplete="off"
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setPhotoDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
-    </>
+
+      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <form onSubmit={saveEmail}>
+            <DialogHeader>
+              <DialogTitle>Edit email</DialogTitle>
+              <DialogDescription>
+                This address is used for sign-in and important notifications.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-2 py-2">
+              <label htmlFor="profile-email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="profile-email"
+                type="email"
+                value={draftEmail}
+                onChange={(e) => setDraftEmail(e.target.value)}
+                autoComplete="email"
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setEmailDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete account</DialogTitle>
+            <DialogDescription>
+              This will permanently remove your account and associated data.
+              This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Delete account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
