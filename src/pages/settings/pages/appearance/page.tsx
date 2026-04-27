@@ -1,5 +1,12 @@
-import { useTheme } from "@/components/theme-provider"
-import { Card, CardContent } from "@/components/ui/card"
+import { useEffect, useMemo, useState } from "react"
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
 import {
   Select,
   SelectContent,
@@ -8,106 +15,75 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
-import { Tick02Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { Link } from "react-router-dom"
-
-function Breadcrumb() {
-  return (
-    <nav
-      aria-label="Breadcrumb"
-      className="text-muted-foreground mb-6 flex flex-wrap items-center gap-1.5 text-sm"
-    >
-      <Link
-        to="/settings/profile"
-        className="hover:text-foreground transition-colors"
-      >
-        User
-      </Link>
-      <span aria-hidden className="text-muted-foreground/80">
-        /
-      </span>
-      <span className="text-foreground font-medium">Appearance</span>
-    </nav>
-  )
-}
-
-function ThemePreviewLight({ selected }: { selected: boolean }) {
-  return (
-    <div className="rounded-md bg-neutral-200/90 p-1.5 dark:bg-neutral-700/50">
-      <div className="relative aspect-[4/3] rounded-md bg-white shadow-sm ring-1 ring-black/5">
-        <span className="absolute left-2 top-2 text-lg font-semibold tracking-tight text-violet-600">
-          Aa
-        </span>
-        {selected ? (
-          <div
-            className="absolute bottom-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-violet-600 text-white shadow"
-            aria-hidden
-          >
-            <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3" />
-          </div>
-        ) : null}
-      </div>
-    </div>
-  )
-}
-
-function ThemePreviewDark({ selected }: { selected: boolean }) {
-  return (
-    <div className="rounded-md bg-neutral-800 p-1.5">
-      <div className="relative aspect-[4/3] rounded-md bg-neutral-950 shadow-inner ring-1 ring-white/10">
-        <span className="absolute left-2 top-2 text-lg font-semibold tracking-tight text-white">
-          Aa
-        </span>
-        {selected ? (
-          <div
-            className="absolute bottom-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-violet-500 text-white shadow"
-            aria-hidden
-          >
-            <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3" />
-          </div>
-        ) : null}
-      </div>
-    </div>
-  )
-}
-
-function ThemePreviewSystem({ selected }: { selected: boolean }) {
-  return (
-    <div className="relative flex overflow-hidden rounded-md bg-neutral-200/90 ring-1 ring-black/5 dark:bg-neutral-700/50">
-      <div className="relative flex-1 p-1.5">
-        <div className="relative aspect-[4/3] rounded-l-sm rounded-r-none bg-white shadow-sm">
-          <span className="absolute left-1.5 top-1.5 text-sm font-semibold text-neutral-900">
-            Aa
-          </span>
-        </div>
-      </div>
-      <div className="relative flex-1 p-1.5">
-        <div className="relative aspect-[4/3] rounded-l-none rounded-r-sm bg-neutral-950 ring-1 ring-white/10">
-          <span className="absolute left-1.5 top-1.5 text-sm font-semibold text-white">
-            Aa
-          </span>
-        </div>
-      </div>
-      {selected ? (
-        <div
-          className="pointer-events-none absolute inset-0 flex items-end justify-end p-2"
-          aria-hidden
-        >
-          <div className="flex size-5 items-center justify-center rounded-full bg-violet-600 text-white shadow">
-            <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3" />
-          </div>
-        </div>
-      ) : null}
-    </div>
-  )
-}
+import { useTheme } from "@/components/theme-provider"
+import { getLanguageSelectOptions } from "./language-options"
 
 export default function AppearanceSettingsPage() {
+  const { theme, setTheme } = useTheme()
+  const languageOptions = useMemo(() => getLanguageSelectOptions(), [])
+  const [language, setLanguage] = useState("en")
+
+  useEffect(() => {
+    if (
+      languageOptions.length > 0 &&
+      !languageOptions.some((o) => o.value === language)
+    ) {
+      const fallback =
+        languageOptions.find(
+          (o) => o.value === "en" || o.value.startsWith("en-")
+        ) ?? languageOptions[0]
+      setLanguage(fallback.value)
+    }
+  }, [language, languageOptions])
 
   return (
     <div className="mx-0 max-w-xl space-y-10 pb-12">
+
+    <section className="space-y-4">
+    <div className="space-y-1">
+      <h2 className="text-sm font-medium">Theme</h2>
+      <p className="text-muted-foreground text-sm leading-relaxed">
+        Choose how the interface looks.
+      </p>
+    </div>
+    <RadioGroup
+      value={theme}
+      onValueChange={(value) => setTheme(value as "light" | "dark" | "system")}
+      className="grid grid-cols-3 gap-4"
+    >
+      <FieldLabel className="relative h-32" htmlFor="theme-light">
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldTitle>Light</FieldTitle>
+          </FieldContent>
+          <RadioGroupItem value="light" id="theme-light" />
+        </Field>
+        <div className="absolute bottom-0 left-1/2 h-20 w-2/3 -translate-x-1/2 rounded-t-md border bg-white dark:text-black p-2 ">Aa</div>
+      </FieldLabel>
+      <FieldLabel className="relative h-32" htmlFor="theme-dark">
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldTitle>Dark</FieldTitle>
+          </FieldContent>
+          <RadioGroupItem value="dark" id="theme-dark" />
+        </Field>
+        <div className="absolute bottom-0 left-1/2 h-20 w-2/3 -translate-x-1/2 rounded-t-md border bg-zinc-900 text-white p-2">Aa</div>
+      </FieldLabel>
+      <FieldLabel className="relative h-32" htmlFor="theme-system">
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldTitle>System</FieldTitle>
+          </FieldContent>
+          <RadioGroupItem value="system" id="theme-system" />
+        </Field>
+        <div className="absolute bottom-0 left-1/2 flex h-20 w-2/3 -translate-x-1/2 overflow-hidden rounded-t-md">
+          <div className="h-full w-1/2 bg-white"></div>
+          <div className="h-full w-1/2 bg-zinc-900"></div>
+        </div>
+      </FieldLabel>
+    </RadioGroup>
+    </section>
+
       <section className="space-y-4">
         <div className="space-y-1">
           <h2 className="text-sm font-medium">Language</h2>
@@ -115,14 +91,19 @@ export default function AppearanceSettingsPage() {
             Select your preferred language
           </p>
         </div>
-        <Select defaultValue="en">
+        <Select value={language} onValueChange={setLanguage}>
           <SelectTrigger size="default" className="h-10 w-full max-w-xl rounded-lg">
             <SelectValue placeholder="Language" />
           </SelectTrigger>
-          <SelectContent position="popper" className="min-w-[var(--radix-select-trigger-width)]">
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="es">Español</SelectItem>
-            <SelectItem value="fr">Français</SelectItem>
+          <SelectContent
+            position="popper"
+            className="max-h-[min(24rem,var(--radix-select-content-available-height))] min-w-[var(--radix-select-trigger-width)]"
+          >
+            {languageOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </section>
