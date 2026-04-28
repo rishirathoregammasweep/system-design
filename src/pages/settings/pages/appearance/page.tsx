@@ -77,8 +77,8 @@ export default function AppearanceSettingsPage() {
           <RadioGroupItem value="system" id="theme-system" />
         </Field>
         <div className="absolute bottom-0 left-1/2 flex h-20 w-2/3 -translate-x-1/2 overflow-hidden rounded-t-md">
-          <div className="h-full w-1/2 bg-white"></div>
-          <div className="h-full w-1/2 bg-zinc-900"></div>
+          <div className="h-full w-1/2 shadow-lg p-2 text-black bg-white">Aa</div>
+          <div className="h-full w-1/2 shadow-lg p-2 text-white bg-zinc-900">Aa</div>
         </div>
       </FieldLabel>
     </RadioGroup>

@@ -32,7 +32,8 @@ import MembersSettingsPage from "@/pages/settings/pages/members/page"
 import TriggersPage from "@/pages/triggers/page"
 import TemplatesPage from "@/pages/templates/page"
 import UsersPage from "@/pages/users/page"
-
+import LoginPage from "@/pages/login/page"
+import SignupPage from "@/pages/signup/page"
 function PageTitle({ title }: { title: string }) {
   return (
     <div className="p-8">
@@ -101,6 +102,8 @@ export function App() {
           <Route path="create-journey" element={<CreateJourneyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignupPage />} />
       </Routes>
     </BrowserRouter>
   )
