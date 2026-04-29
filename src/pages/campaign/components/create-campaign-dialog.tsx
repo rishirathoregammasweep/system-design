@@ -74,7 +74,7 @@ export function CreateCampaignDialog() {
         <DialogContent className="flex max-h-[min(90vh,720px)] max-w-lg flex-col gap-0 overflow-hidden p-0 sm:max-w-xl">
           <form
             onSubmit={handleSubmit}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            className="flex min-h-0 flex-1 flex-col h-[-webkit-fill-available] overflow-hidden"
           >
             <DialogHeader className="shrink-0 space-y-1 border-b border-border/60 px-6 py-4 text-left">
               <DialogTitle>Create campaign</DialogTitle>

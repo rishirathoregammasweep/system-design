@@ -1,256 +1,208 @@
-import { useMemo, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import "@xyflow/react/dist/style.css"
+import { HugeiconsIcon } from "@hugeicons/react"
+import {
+  ArrowLeft01Icon,
+  Link02FreeIcons,
+  PlayCircle02FreeIcons,
+} from "@hugeicons/core-free-icons"
+import { Switch } from "@/components/ui/switch"
+import { Separator } from "@/components/ui/separator"
+import { useCallback, useState } from "react"
 import {
   Background,
-  BackgroundVariant,
-  Controls,
-  MarkerType,
-  MiniMap,
   ReactFlow,
-  ReactFlowProvider,
-  useEdgesState,
+  addEdge,
+  ConnectionLineType,
+  Position,
   useNodesState,
+  useEdgesState,
+  type Connection,
+  type Edge,
+  type EdgeTypes,
+  type Node,
+  type NodeMouseHandler,
+  type NodeTypes,
 } from "@xyflow/react"
-import { ChevronRight, MoreHorizontal } from "lucide-react"
+import dagre from "@dagrejs/dagre"
+import { EdgeWithButton } from "./edges-types/edge-button"
+import { useTheme } from "@/components/theme-provider"
+import TriggerNode from "./nodes-ui/trigger-node"
+import JourneyStepNode from "./nodes-ui/journey-step-node"
+import PlusNode from "./nodes-ui/plus-node"
+import { NodeDetailPanel } from "./panels/node-detail-panel"
 
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+const position = { x: 0, y: 0 }
 
-import "@xyflow/react/dist/style.css"
+const edgeTypes = {
+  edgeButton: EdgeWithButton,
+} satisfies EdgeTypes
 
-function JourneyFlowBoard() {
-  const [nodes, , onNodesChange] = useNodesState([])
-  const [edges, , onEdgesChange] = useEdgesState([])
+export const initialNodes = [
+  {
+    id: "1",
+    type: "trigger",
+    data: {},
+    position,
+  },
+  {
+    id: "2",
+    type: "journeyStep",
+    data: { kind: "email" as const, label: "Welcome email" },
+    position,
+  },
+  {
+    id: "3",
+    type: "journeyStep",
+    data: { kind: "delay" as const, label: "Wait 2 days" },
+    position,
+  },
+]
 
-  const defaultEdgeOptions = useMemo(
-    () => ({
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-        width: 14,
-        height: 14,
-        color: "var(--color-muted-foreground)",
+const nodeTypes = {
+  trigger: TriggerNode,
+  journeyStep: JourneyStepNode,
+  plus: PlusNode,
+} satisfies NodeTypes
+
+export const initialEdges = [
+  { id: "e12", source: "1", target: "2", type: "edgeButton", animated: false },
+  { id: "e13", source: "1", target: "3", type: "edgeButton", animated: false },
+  { id: "e2fork", source: "2", target: "fork-plus", type: "edgeButton", animated: false },
+]
+
+const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
+
+const nodeWidth = 172
+const nodeHeight = 36
+
+const getLayoutedElements = (
+  nodes: Node[],
+  edges: Edge[],
+  direction: "TB" | "LR" = "TB",
+) => {
+  const isHorizontal = direction === "LR"
+  dagreGraph.setGraph({ rankdir: direction })
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
+  })
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target)
+  })
+
+  dagre.layout(dagreGraph)
+
+  const newNodes = nodes.map((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id)
+    const newNode = {
+      ...node,
+      targetPosition: isHorizontal ? Position.Left : Position.Top,
+      sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
+      position: {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
       },
-    }),
-    []
+    }
+
+    return newNode
+  })
+
+  return { nodes: newNodes, edges }
+}
+
+const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+  initialNodes,
+  initialEdges,
+)
+
+const Flow = () => {
+  const [nodes, , onNodesChange] = useNodesState(layoutedNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+
+  const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
+    setSelectedNode(node)
+  }, [])
+
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null)
+  }, [])
+
+  const onConnect = useCallback(
+    (params: Connection) => {
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: "edgeButton",
+            animated: true,
+          },
+          eds,
+        ),
+      )
+    },
+    [setEdges],
   )
+
+  const {theme} = useTheme()
 
   return (
     <ReactFlow
+      className="h-full w-full"
+      maxZoom={1.2}
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      nodesConnectable={false}
-      nodesDraggable={false}
-      elementsSelectable={false}
-      defaultEdgeOptions={defaultEdgeOptions}
+      onConnect={onConnect}
+      onNodeClick={onNodeClick}
+      onPaneClick={onPaneClick}
+      edgeTypes={edgeTypes}
+      connectionLineType={ConnectionLineType.SimpleBezier}
       fitView
-      fitViewOptions={{ padding: 0.35 }}
-      minZoom={0.35}
-      maxZoom={1.25}
-      proOptions={{ hideAttribution: true }}
-      className="bg-[oklch(0.97_0_0)] dark:bg-neutral-950/80 h-full min-h-[min(520px,calc(100dvh-14rem))]"
+      nodeTypes={nodeTypes}
+      colorMode={theme}
     >
-      <Background
-        id="journey-dots"
-        gap={16}
-        size={1}
-        color="oklch(0.88 0 0)"
-        className="dark:opacity-40"
-        variant={BackgroundVariant.Dots}
-      />
-      <Controls
-        showInteractive={false}
-        className="!m-4 overflow-hidden rounded-lg border border-border/80 bg-card shadow-sm [&_button]:rounded-none [&_button]:border-0 [&_button]:border-b [&_button]:border-border/60 [&_button]:bg-card [&_button]:last:border-b-0"
-      />
-      <MiniMap
-        className="!m-4 overflow-hidden rounded-lg border border-border/80 bg-card shadow-sm"
-        maskColor="rgb(0 0 0 / 12%)"
-        nodeColor={() => "var(--color-primary)"}
+      <Background />
+      <NodeDetailPanel
+        node={selectedNode}
+        onClose={() => setSelectedNode(null)}
       />
     </ReactFlow>
   )
 }
 
-export default function CreateJourneyPage() {
-  const navigate = useNavigate()
-  const [journeyMeta, setJourneyMeta] = useState<{
-    title: string
-    description: string
-  } | null>(null)
-  const [draftTitle, setDraftTitle] = useState("")
-  const [draftDescription, setDraftDescription] = useState("")
-
-  const setupOpen = journeyMeta === null
-
-  function handleSetupSave(e: React.FormEvent) {
-    e.preventDefault()
-    const title = draftTitle.trim()
-    if (!title) return
-    setJourneyMeta({
-      title,
-      description: draftDescription.trim(),
-    })
-  }
-
+const Page = () => {
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Dialog open={setupOpen}>
-        <DialogContent
-          showCloseButton={false}
-          className="sm:max-w-md"
-          onPointerDownOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-        >
-          <form onSubmit={handleSetupSave}>
-            <DialogHeader>
-              <DialogTitle>New journey</DialogTitle>
-              <DialogDescription>
-                Name your journey and add a short description. You can continue
-                when you are ready.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-2">
-              <div className="space-y-2">
-                <label htmlFor="journey-title" className="text-sm font-medium">
-                  Title
-                </label>
-                <Input
-                  id="journey-title"
-                  value={draftTitle}
-                  onChange={(e) => setDraftTitle(e.target.value)}
-                  placeholder="e.g. Welcome series"
-                  required
-                  autoFocus
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  htmlFor="journey-description"
-                  className="text-sm font-medium"
-                >
-                  Description
-                </label>
-                <Textarea
-                  id="journey-description"
-                  value={draftDescription}
-                  onChange={(e) => setDraftDescription(e.target.value)}
-                  placeholder="What this journey is for"
-                  rows={3}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/journeys")}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={!draftTitle.trim()}>
-                Continue
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      <div className="border-b border-border/80 px-8 py-4">
-        <nav
-          aria-label="Breadcrumb"
-          className="text-muted-foreground mb-3 flex flex-wrap items-center gap-1 text-sm"
-        >
-          <Link
-            to="/dashboard"
-            className="hover:text-foreground transition-colors"
-          >
-            Acme Org
-          </Link>
-          <ChevronRight className="size-3.5 shrink-0 opacity-60" />
-          <Link
-            to="/dashboard"
-            className="hover:text-foreground transition-colors"
-          >
-            Acme App
-          </Link>
-          <ChevronRight className="size-3.5 shrink-0 opacity-60" />
-          <Link
-            to="/journeys"
-            className="hover:text-foreground transition-colors"
-          >
-            Journeys
-          </Link>
-        </nav>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0 space-y-1">
-            <div className="flex min-w-0 flex-wrap items-center gap-3">
-              <h1 className="text-xl font-semibold tracking-tight">
-                {journeyMeta?.title ?? "New journey"}
-              </h1>
-              <span className="bg-secondary text-secondary-foreground inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium">
-                Draft
-              </span>
-            </div>
-            {journeyMeta?.description ? (
-              <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
-                {journeyMeta.description}
-              </p>
-            ) : null}
-          </div>
-          <div className="flex shrink-0 flex-wrap items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" aria-label="More options">
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Duplicate journey</DropdownMenuItem>
-                <DropdownMenuItem>Export</DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive">
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button size="sm" onClick={() => navigate("/journeys")}>
-              Save &amp; close
-            </Button>
-            <Button size="sm" disabled variant="secondary">
-              Set live
-            </Button>
-          </div>
+    <div className="bg-background flex h-full min-h-0 flex-col">
+      <div className="flex shrink-0 items-center justify-between border-b border-dashed border-border/60 p-4">
+        <Button variant="outline" size="lg" type="button">
+          <HugeiconsIcon icon={ArrowLeft01Icon} />
+          Back
+        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="lg">
+            <HugeiconsIcon icon={Link02FreeIcons} />
+          </Button>
+          <Separator orientation="vertical" />
+          <Button variant="outline" size="lg">
+            <HugeiconsIcon icon={PlayCircle02FreeIcons} />
+            Run now
+          </Button>
+          <Button variant="outline" size="lg">
+            <Switch />
+            Disabled
+          </Button>
         </div>
       </div>
 
-      <div className="relative min-h-[min(520px,calc(100dvh-14rem))] flex-1">
-        {journeyMeta ? (
-          <ReactFlowProvider>
-            <JourneyFlowBoard />
-          </ReactFlowProvider>
-        ) : (
-          <div className="bg-muted/20 flex h-full min-h-[320px] items-center justify-center">
-            <p className="text-muted-foreground text-sm">
-              Continue from the dialog to edit your journey.
-            </p>
-          </div>
-        )}
+      <div className="min-h-0 flex-1">
+        <Flow />
       </div>
     </div>
   )
 }
+
+export default Page

@@ -159,3 +159,7 @@
 .blockbuilder-branding{
   display: none!important;
 }
+
+ .react-flow__attribution{
+  display: none!important;
+}
