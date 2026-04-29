@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
+import { cn } from "@/lib/utils"
 
 export type PlusNodeData = {
   /** Called when the user picks a step type from the menu (wire from the canvas parent). */
@@ -34,7 +35,7 @@ export type PlusStepKind =
 
 type PlusFlowNode = Node<PlusNodeData, "plus">
 
-function PlusNode({ data }: NodeProps<PlusFlowNode>) {
+function PlusNode({ data, selected }: NodeProps<PlusFlowNode>) {
   const onAddStep = data.onAddStep
 
   function pick(kind: PlusStepKind) {
@@ -57,6 +58,7 @@ function PlusNode({ data }: NodeProps<PlusFlowNode>) {
               aria-label="Add journey step"
               size="icon-xs"
               variant="outline"
+              className={cn(selected && "border-red-500")}
             >
               <HugeiconsIcon icon={PlusSignIcon} strokeWidth={2} className="size-4" />
             </Button>

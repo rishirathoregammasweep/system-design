@@ -118,17 +118,22 @@ const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
 )
 
 const Flow = () => {
-  const [nodes, , onNodesChange] = useNodesState(layoutedNodes)
+  const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+
+  const clearNodeSelection = useCallback(() => {
+    setSelectedNode(null)
+    setNodes((nds) => nds.map((n) => ({ ...n, selected: false })))
+  }, [setNodes])
 
   const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
     setSelectedNode(node)
   }, [])
 
   const onPaneClick = useCallback(() => {
-    setSelectedNode(null)
-  }, [])
+    clearNodeSelection()
+  }, [clearNodeSelection])
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -194,6 +199,9 @@ const Page = () => {
           <Button variant="outline" size="lg">
             <Switch />
             Disabled
+          </Button>
+          <Button variant="default" size="lg">
+            Publish
           </Button>
         </div>
       </div>

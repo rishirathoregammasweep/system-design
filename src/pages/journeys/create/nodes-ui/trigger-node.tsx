@@ -1,12 +1,18 @@
 import { memo } from "react"
 import { Handle, Position, type NodeProps } from "@xyflow/react"
 import { Card, CardContent } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
-function TriggerNode(_props: NodeProps) {
+function TriggerNode({ selected }: NodeProps) {
   return (
     <>
       <div className="">
-        <Card className="min-w-max max-w-min px-4 p-2">
+        <Card
+          className={cn(
+            "min-w-max max-w-min border px-4 p-2",
+            selected && "border-red-500",
+          )}
+        >
           <CardContent className="flex flex-col gap-1 py-0">
             <div className="gap-2">
               <p className="text-muted-foreground text-xs font-medium">Trigger</p>
