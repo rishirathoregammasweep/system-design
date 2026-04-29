@@ -4,6 +4,7 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuPortal,
     DropdownMenuSeparator,
     DropdownMenuShortcut,
@@ -12,7 +13,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DeleteIcon, PlusSignIcon } from '@hugeicons/core-free-icons';
+import { Clock01Icon, DeleteIcon, FilterIcon, Mail01Icon, PlusSignIcon, WorkflowCircleIcon, ZapIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
     EdgeToolbar,
@@ -46,6 +47,28 @@ export function EdgeWithButton(props: EdgeProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuGroup>
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuItem>
+                                        <HugeiconsIcon icon={ZapIcon} />
+                                    Trigger
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                            <HugeiconsIcon icon={Mail01Icon} />
+                                            Email
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <HugeiconsIcon icon={Clock01Icon} />
+                                        Wait</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <HugeiconsIcon icon={WorkflowCircleIcon} />
+                                        Condition</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <HugeiconsIcon icon={FilterIcon} />
+                                        Filter</DropdownMenuItem>
+
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
                                     <DropdownMenuItem>
                                         <span>Edit</span>
                                         <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
@@ -54,29 +77,6 @@ export function EdgeWithButton(props: EdgeProps) {
                                         <span>Duplicate</span>
                                         <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
                                     </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                        <span>Archive</span>
-                                        <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSub>
-                                        <DropdownMenuSubTrigger>More</DropdownMenuSubTrigger>
-                                        <DropdownMenuPortal>
-                                            <DropdownMenuSubContent>
-                                                <DropdownMenuItem>Move to project</DropdownMenuItem>
-                                                <DropdownMenuItem>Move to folder</DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem>Advanced options</DropdownMenuItem>
-                                            </DropdownMenuSubContent>
-                                        </DropdownMenuPortal>
-                                    </DropdownMenuSub>
-                                </DropdownMenuGroup>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem>Share</DropdownMenuItem>
-                                    <DropdownMenuItem>Add to favorites</DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem variant="destructive">

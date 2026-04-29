@@ -23,6 +23,7 @@ import {
   type Node,
   type NodeMouseHandler,
   type NodeTypes,
+  BackgroundVariant,
 } from "@xyflow/react"
 import dagre from "@dagrejs/dagre"
 import { EdgeWithButton } from "./edges-types/edge-button"
@@ -157,6 +158,7 @@ const Flow = () => {
     <ReactFlow
       className="h-full w-full"
       maxZoom={1.2}
+      minZoom={1.2}
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
@@ -170,7 +172,9 @@ const Flow = () => {
       nodeTypes={nodeTypes}
       colorMode={theme}
     >
-      <Background />
+      <Background 
+      color="gray"
+      variant={BackgroundVariant.Dots} />
       <NodeDetailPanel
         node={selectedNode}
         onClose={() => setSelectedNode(null)}
@@ -181,7 +185,7 @@ const Flow = () => {
 
 const Page = () => {
   return (
-    <div className="bg-background flex h-full min-h-0 flex-col">
+    <div className=" flex h-full min-h-0 flex-col">
       <div className="flex shrink-0 items-center justify-between border-b border-dashed border-border/60 p-4">
         <Button variant="outline" size="lg" type="button">
           <HugeiconsIcon icon={ArrowLeft01Icon} />

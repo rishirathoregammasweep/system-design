@@ -9,7 +9,7 @@ function TriggerNode({ selected }: NodeProps) {
       <div className="">
         <Card
           className={cn(
-            "min-w-max max-w-min border px-4 p-2",
+            "min-w-max max-w-min border-none px-4 p-2",
             selected && "border-red-500",
           )}
         >
