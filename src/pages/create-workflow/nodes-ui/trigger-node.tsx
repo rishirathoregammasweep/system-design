@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 function TriggerNode({ selected }: NodeProps) {
   return (
     <>
-      <div className="">
+      <div className="group">
         <Card
           className={cn(
             "min-w-max max-w-min border-none px-4 p-2",
@@ -23,11 +23,12 @@ function TriggerNode({ selected }: NodeProps) {
           </CardContent>
         </Card>
       </div>
+
       <Handle
         type="source"
         position={Position.Bottom}
-        className="opacity-0"
-      />
+        className="opacity-0 group-hover:opacity-100 duration-300 !w-2 !h-2 border-2 border-red-500"
+      />  
     </>
   )
 }

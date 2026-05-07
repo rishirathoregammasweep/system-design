@@ -12,7 +12,7 @@ import ApiPage from "@/pages/api/page"
 import CampaignPage from "@/pages/campaign/page"
 import DashboardPage from "@/pages/dashboard/page"
 import EventsPage from "@/pages/events/page"
-import CreateJourneyPage from "@/pages/journeys/create/page"
+import CreateJourneyPage from "@/pages/create-workflow/page"
 import JourneysPage from "@/pages/journeys/page"
 import PlayerPage from "@/pages/player/page"
 import SegmentationPage from "@/pages/segmentation/page"
@@ -34,6 +34,7 @@ import TemplatesPage from "@/pages/templates/page"
 import UsersPage from "@/pages/users/page"
 import LoginPage from "@/pages/login/page"
 import SignupPage from "@/pages/signup/page"
+import OnboardingPage from "./pages/onboarding/page"
 function PageTitle({ title }: { title: string }) {
   return (
     <div className="p-8">
@@ -102,6 +103,7 @@ export function App() {
           <Route path="create-journey" element={<CreateJourneyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
+        <Route path="onboarding" element={<OnboardingPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
       </Routes>

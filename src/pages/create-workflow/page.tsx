@@ -8,13 +8,12 @@ import {
 } from "@hugeicons/core-free-icons"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   Background,
   ReactFlow,
   addEdge,
   ConnectionLineType,
-  Position,
   useNodesState,
   useEdgesState,
   type Connection,
@@ -24,19 +23,36 @@ import {
   type NodeMouseHandler,
   type NodeTypes,
   BackgroundVariant,
+  getIncomers,
+  getOutgoers,
+  getConnectedEdges,
 } from "@xyflow/react"
-import dagre from "@dagrejs/dagre"
 import { EdgeWithButton } from "./edges-types/edge-button"
 import { useTheme } from "@/components/theme-provider"
 import TriggerNode from "./nodes-ui/trigger-node"
-import JourneyStepNode from "./nodes-ui/journey-step-node"
 import PlusNode from "./nodes-ui/plus-node"
 import { NodeDetailPanel } from "./panels/node-detail-panel"
+import actionNode from "./nodes-ui/action-node"
+import conditionNode from "./nodes-ui/condition-node"
+import emailNode from "./nodes-ui/email-node"
+import endNode from "./nodes-ui/end-node"
+import smsNode from "./nodes-ui/sms-node"
+import waitNode from "./nodes-ui/wait-node"
+import {
+  downstreamPlusGraphChanged,
+  ensureDownstreamPlusNodes,
+} from "./utils/ensure-downstream-plus-nodes"
+import {
+  FLOW_NODE_ORIGIN,
+  INITIAL_PLUS_Y,
+  INITIAL_TRIGGER_Y,
+} from "./utils/workflow-layout"
 
-const position = { x: 0, y: 0 }
+const position = { x: 0, y: INITIAL_TRIGGER_Y }
 
 const edgeTypes = {
   edgeButton: EdgeWithButton,
+
 } satisfies EdgeTypes
 
 export const initialNodes = [
@@ -48,84 +64,67 @@ export const initialNodes = [
   },
   {
     id: "2",
-    type: "journeyStep",
-    data: { kind: "email" as const, label: "Welcome email" },
-    position,
-  },
-  {
-    id: "3",
-    type: "journeyStep",
-    data: { kind: "delay" as const, label: "Wait 2 days" },
-    position,
+    type: "plusNode",
+    data: {},
+    /** Same x as trigger; spaced by WORKFLOW_STEP_GAP_Y, centered on flow y=0 with trigger. */
+    position: { x: 0, y: INITIAL_PLUS_Y },
   },
 ]
 
 const nodeTypes = {
   trigger: TriggerNode,
-  journeyStep: JourneyStepNode,
-  plus: PlusNode,
+  actionNode: actionNode,
+  conditionNode: conditionNode,
+  emailNode: emailNode,
+  smsNode: smsNode,
+  waitNode: waitNode,
+  endNode: endNode,
+  plusNode: PlusNode,
 } satisfies NodeTypes
 
 export const initialEdges = [
-  { id: "e12", source: "1", target: "2", type: "edgeButton", animated: false },
-  { id: "e13", source: "1", target: "3", type: "edgeButton", animated: false },
-  { id: "e2fork", source: "2", target: "fork-plus", type: "edgeButton", animated: false },
+  { id: "e12", source: "1", target: "2", animated: true },
 ]
 
-const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
-
-const nodeWidth = 172
-const nodeHeight = 36
-
-const getLayoutedElements = (
-  nodes: Node[],
-  edges: Edge[],
-  direction: "TB" | "LR" = "TB",
-) => {
-  const isHorizontal = direction === "LR"
-  dagreGraph.setGraph({ rankdir: direction })
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
-  })
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target)
-  })
-
-  dagre.layout(dagreGraph)
-
-  const newNodes = nodes.map((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id)
-    const newNode = {
-      ...node,
-      targetPosition: isHorizontal ? Position.Left : Position.Top,
-      sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
-      position: {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      },
-    }
-
-    return newNode
-  })
-
-  return { nodes: newNodes, edges }
-}
-
-const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-  initialNodes,
-  initialEdges,
-)
 
 const Flow = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
+
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+  const onNodesDelete = useCallback(
+    (deleted: readonly Node[]) => {
+      let remainingNodes = [...nodes];
+      setEdges(
+        deleted.reduce((acc: Edge[], node: Node) => {
+          const incomers = getIncomers(node, remainingNodes, acc);
+          const outgoers = getOutgoers(node, remainingNodes, acc);
+          const connectedEdges = getConnectedEdges([node], acc);
+ 
+          const remainingEdges = acc.filter((edge: Edge) => !connectedEdges.includes(edge));
+ 
+          const createdEdges = incomers.flatMap(({ id: source }) =>
+            outgoers.map(({ id: target }) => ({
+              id: `${source}->${target}`,
+              source,
+              target,
+              animated: true,
+            })),
+          );
+ 
+          remainingNodes = remainingNodes.filter((rn) => rn.id !== node.id);
+ 
+          return [...remainingEdges, ...createdEdges];
+        }, edges),
+      );
+    },
+    [nodes, edges],
+  );
 
   const clearNodeSelection = useCallback(() => {
     setSelectedNode(null)
-    setNodes((nds) => nds.map((n) => ({ ...n, selected: false })))
+    setNodes((nds: Node[]) => nds.map((n: Node) => ({ ...n, selected: false })))
   }, [setNodes])
 
   const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
@@ -136,13 +135,24 @@ const Flow = () => {
     clearNodeSelection()
   }, [clearNodeSelection])
 
+  useEffect(() => {
+    const next = ensureDownstreamPlusNodes(nodes, edges)
+    if (
+      !downstreamPlusGraphChanged({ nodes, edges }, next)
+    ) {
+      return
+    }
+    setNodes(next.nodes)
+    setEdges(next.edges)
+  }, [nodes, edges, setNodes, setEdges])
+
   const onConnect = useCallback(
     (params: Connection) => {
-      setEdges((eds) =>
+      setEdges((eds: Edge[]) =>
         addEdge(
           {
             ...params,
-            type: "edgeButton",
+            // type: "edgeButton",
             animated: true,
           },
           eds,
@@ -159,6 +169,7 @@ const Flow = () => {
       className="h-full w-full"
       maxZoom={1.2}
       minZoom={1.2}
+      nodeOrigin={FLOW_NODE_ORIGIN}
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
@@ -166,13 +177,16 @@ const Flow = () => {
       onConnect={onConnect}
       onNodeClick={onNodeClick}
       onPaneClick={onPaneClick}
+      onNodesDelete={onNodesDelete}
       edgeTypes={edgeTypes}
       connectionLineType={ConnectionLineType.SimpleBezier}
       fitView
       nodeTypes={nodeTypes}
       colorMode={theme}
     >
-      <Background 
+      <Background
+      gap={16}
+      size={1}
       color="gray"
       variant={BackgroundVariant.Dots} />
       <NodeDetailPanel
@@ -185,7 +199,7 @@ const Flow = () => {
 
 const Page = () => {
   return (
-    <div className=" flex h-full min-h-0 flex-col">
+    <div className=" flex h-full min-h-0 flex-col fixed top-0 left-0 w-full z-100 bg-background">
       <div className="flex shrink-0 items-center justify-between border-b border-dashed border-border/60 p-4">
         <Button variant="outline" size="lg" type="button">
           <HugeiconsIcon icon={ArrowLeft01Icon} />

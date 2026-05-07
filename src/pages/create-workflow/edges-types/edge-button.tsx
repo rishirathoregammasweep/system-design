@@ -24,7 +24,6 @@ import {
 } from '@xyflow/react';
 import { Card, CardContent } from "@/components/ui/card";
 
-// Example of a custom edge with a centered button in the toolbar component
 export function EdgeWithButton(props: EdgeProps) {
     const [edgePath, centerX, centerY] = getBezierPath(props);
     const { deleteElements, getEdges } = useReactFlow();
@@ -39,14 +38,14 @@ export function EdgeWithButton(props: EdgeProps) {
             <EdgeToolbar data-item-type="edge-button" edgeId={props.id} x={centerX} y={centerY} isVisible>
                 <Card className="shadow-none p-0 ring-0 border-none">
                     <CardContent className="flex p-0 items-center justify-center gap-2">
-                        <DropdownMenu>
+                        {/* <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline">
+                                <Button variant="outline" type="button" size='icon'>
                                     <HugeiconsIcon icon={PlusSignIcon} />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuGroup>
+                            <DropdownMenuContent className="z-[200]">
+                            <DropdownMenuGroup>
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                     <DropdownMenuItem>
                                         <HugeiconsIcon icon={ZapIcon} />
@@ -68,15 +67,28 @@ export function EdgeWithButton(props: EdgeProps) {
 
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
+                                <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem>
-                                        <span>Edit</span>
-                                        <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+                                        <span>Archive</span>
+                                        <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <span>Duplicate</span>
-                                        <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
-                                    </DropdownMenuItem>
+                                    <DropdownMenuSub>
+                                        <DropdownMenuSubTrigger>More</DropdownMenuSubTrigger>
+                                        <DropdownMenuPortal>
+                                            <DropdownMenuSubContent>
+                                                <DropdownMenuItem>Move to project</DropdownMenuItem>
+                                                <DropdownMenuItem>Move to folder</DropdownMenuItem>
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuItem>Advanced options</DropdownMenuItem>
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuPortal>
+                                    </DropdownMenuSub>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem>Share</DropdownMenuItem>
+                                    <DropdownMenuItem>Add to favorites</DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem variant="destructive">
@@ -84,7 +96,7 @@ export function EdgeWithButton(props: EdgeProps) {
                                     <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> */}
 
                         <Button variant="secondary" size="icon" onClick={deleteEdge}>
                             <HugeiconsIcon icon={DeleteIcon} />

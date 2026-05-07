@@ -27,10 +27,13 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { sidebarMenus } from "@/components/layouts/sidebar-menus"
 import {
+  AddIcon,
   BookOpen01Icon,
   CancelIcon,
   CustomerService01Icon,
   HelpCircleIcon,
+  PanelLeftIcon,
+  PlusMinusIcon,
   SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"
@@ -280,14 +283,14 @@ export function LayoutSidebar() {
   return (
     <div
       className={cn(
-        "grid h-screen items-stretch bg-neutral-50/40 p-0 md:items-center md:p-2 dark:bg-neutral-900/40",
+        "grid h-screen items-stretch bg-neutral-50/40 p-0 md:items-center w-full md:p-2 dark:bg-neutral-900/40",
         isSettings ? "grid-cols-1 md:grid-cols-6" : "grid-cols-1 md:grid-cols-6"
       )}
     >
       {!isSettings ? (
-        <div className="hidden w-max md:col-span-1 md:flex md:h-full md:flex-col md:justify-between md:p-4">
-          <div className="space-y-8">
-            <div>
+        <div className="hidden md:col-span-1 md:flex md:h-full md:flex-col md:justify-between md:p-4 w-full">
+          <div className="space-y-8 w-full">
+            <div className="flex items-center gap-2 justify-between w-full">
               <svg
                 fill="none"
                 height="48"
@@ -323,6 +326,14 @@ export function LayoutSidebar() {
                   />
                 </g>
               </svg>
+              <div className="flex items-center gap-2">
+                <Button variant={"secondary"} size={'icon-lg'} className="rounded-full">
+                  <HugeiconsIcon icon={PanelLeftIcon} strokeWidth={2} />
+                </Button>
+                <Button variant={"secondary"} size={'icon-lg'} className="rounded-full">
+                  <HugeiconsIcon icon={AddIcon} strokeWidth={2} />
+                </Button>
+              </div>
             </div>
             <nav className="space-y-4">
               {sidebarMenus.map((menu) => (
