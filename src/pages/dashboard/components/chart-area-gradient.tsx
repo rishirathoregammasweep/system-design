@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/card"
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
@@ -157,6 +159,7 @@ const ChartAreaGradient = () => {
               tickLine={false}
               axisLine={false}
               tickMargin={12}
+              minTickGap={32}
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
@@ -200,6 +203,7 @@ const ChartAreaGradient = () => {
               stroke="var(--color-iphone)"
               stackId="a"
             />
+            <ChartLegend className="float-right" content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
       </CardContent>

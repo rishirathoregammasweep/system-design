@@ -1,95 +1,102 @@
-import { Bar, BarChart, XAxis, YAxis } from "recharts"
+"use client"
+
+import { TrendingUp } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { cn } from "@/lib/utils"
+
+export const description = "A bar chart with a custom label"
 
 const chartData = [
-  { channel: "email", reach: 275, fill: "var(--color-email)" },
-  { channel: "push", reach: 200, fill: "var(--color-push)" },
-  { channel: "in_app", reach: 187, fill: "var(--color-in_app)" },
-  { channel: "sms", reach: 173, fill: "var(--color-sms)" },
-  { channel: "web", reach: 90, fill: "var(--color-web)" },
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
 ]
 
 const chartConfig = {
-  reach: {
-    label: "Reach",
-  },
-  email: {
-    label: "Email",
+  desktop: {
+    label: "Desktop",
     color: "var(--chart-1)",
   },
-  push: {
-    label: "Push",
+  mobile: {
+    label: "Mobile",
     color: "var(--chart-2)",
   },
-  in_app: {
-    label: "In-app",
-    color: "var(--chart-3)",
-  },
-  sms: {
-    label: "SMS",
-    color: "var(--chart-4)",
-  },
-  web: {
-    label: "Web",
-    color: "var(--chart-5)",
+  label: {
+    color: "var(--background)",
   },
 } satisfies ChartConfig
 
-export function ChartBarMixed({ className }: { className?: string }) {
+export function ChartBarLabelCustom() {
   return (
-    <Card className={cn("p-4 ring-0 shadow-none border-none", className)}>
-      <CardHeader className="px-0">
-        <CardTitle>Reach by channel</CardTitle>
-        <CardDescription>
-          Estimated unique recipients in the last 30 days, grouped by the
-          channel that delivered your campaigns and journeys.
-        </CardDescription>
+    <Card className="shadow-none p-0 ring-0 rounded-none">
+      <CardHeader className="gap-1 p-0">
+        <CardTitle>Bar Chart - Custom Label</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <ChartContainer config={chartConfig}>
+        <ChartContainer className="h-[400px] w-full" config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={chartData}
             layout="vertical"
             margin={{
-              left: 0,
+              right: 16,
             }}
           >
+            <CartesianGrid horizontal={false} />
             <YAxis
-              dataKey="channel"
+              dataKey="month"
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) =>
-                String(
-                  chartConfig[value as keyof typeof chartConfig]?.label ?? value
-                )
-              }
+              tickFormatter={(value) => value.slice(0, 3)}
+              hide
             />
-            <XAxis dataKey="reach" type="number" hide />
+            <XAxis dataKey="desktop" type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent indicator="line" />}
             />
-            <Bar dataKey="reach" radius={5} />
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4}>
+              <LabelList
+                dataKey="month"
+                position="insideLeft"
+                offset={8}
+                className="fill-(--color-label)"
+                fontSize={12}
+              />
+              <LabelList
+                dataKey="desktop"
+                position="right"
+                offset={8}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
+      <ChartLegend className="float-right" content={<ChartLegendContent />} />
     </Card>
   )
 }
