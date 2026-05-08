@@ -79,13 +79,6 @@ export const sidebarMenus = [
     description: "Configure automation triggers and notifications.",
   },
   {
-    title: "API",
-    icon: AppleIntelligenceIcon,
-    path: "/api",
-    heading: "API",
-    description: "Manage the API for your account and workspace.",
-  },
-  {
     title: "Teams",
     icon: Users,
     path: "/users",

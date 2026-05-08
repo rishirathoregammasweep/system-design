@@ -1,10 +1,13 @@
-import { useId } from "react"
+"use client"
+
+import { TrendingUp } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -14,44 +17,132 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { cn } from "@/lib/utils"
+
+export const description = "An area chart with gradient fill"
 
 const chartData = [
-  { month: "January", email: 186, push: 80 },
-  { month: "February", email: 305, push: 200 },
-  { month: "March", email: 237, push: 120 },
-  { month: "April", email: 73, push: 190 },
-  { month: "May", email: 209, push: 130 },
-  { month: "June", email: 214, push: 140 },
+  {
+    month: "January",
+    desktop: 180,
+    mobile: 120,
+    tablet: 90,
+    iphone: 80,
+  },
+  {
+    month: "February",
+    desktop: 400,
+    mobile: 190,
+    tablet: 140,
+    iphone: 130,
+  },
+  {
+    month: "March",
+    desktop: 220,
+    mobile: 135,
+    tablet: 150,
+    iphone: 145,
+  },
+  {
+    month: "April",
+    desktop: 130,
+    mobile: 95,
+    tablet: 100,
+    iphone: 90,
+  },
+
+  // Rise
+  {
+    month: "May",
+    desktop: 290,
+    mobile: 230,
+    tablet: 210,
+    iphone: 205,
+  },
+  {
+    month: "June",
+    desktop: 310,
+    mobile: 210,
+    tablet: 190,
+    iphone: 185,
+  },
+
+  // Consolidation / sideways
+  {
+    month: "July",
+    desktop: 250,
+    mobile: 170,
+    tablet: 160,
+    iphone: 158,
+  },
+  {
+    month: "August",
+    desktop: 340,
+    mobile: 260,
+    tablet: 240,
+    iphone: 235,
+  },
+
+  // Fall
+  {
+    month: "September",
+    desktop: 210,
+    mobile: 150,
+    tablet: 135,
+    iphone: 130,
+  },
+  {
+    month: "October",
+    desktop: 280,
+    mobile: 220,
+    tablet: 200,
+    iphone: 198,
+  },
+  {
+    month: "November",
+    desktop: 160,
+    mobile: 110,
+    tablet: 100,
+    iphone: 95,
+  },
+  {
+    month: "December",
+    desktop: 240,
+    mobile: 180,
+    tablet: 165,
+    iphone: 160,
+  },
 ]
 
 const chartConfig = {
-  email: {
-    label: "Email",
+  desktop: {
+    label: "Desktop",
     color: "var(--chart-1)",
   },
-  push: {
-    label: "Push",
+  mobile: {
+    label: "Mobile",
     color: "var(--chart-2)",
+  },
+  tablet: {
+    label: "Tablet",
+    color: "var(--chart-3)",
+  },
+  iphone: {
+    label: "iPhone",
+    color: "var(--chart-4)",
   },
 } satisfies ChartConfig
 
-export function ChartAreaGradient({ className }: { className?: string }) {
-  const uid = useId().replace(/:/g, "")
-  const fillEmail = `fillEmail-${uid}`
-  const fillPush = `fillPush-${uid}`
-
+const ChartAreaGradient = () => {
   return (
-    <Card className={cn("ring-0 shadow-none border-none", className)}>
-      <CardHeader className="px-0">
-        <CardTitle>Engagement over time</CardTitle>
-        <CardDescription>
-          Unique touches from email and push in the last six months. Stacks show
-          combined reach when both channels contacted the same.
+    <Card className="shadow-none p-0 ring-0 rounded-none">
+      <CardHeader className="gap-1 p-0">
+        <CardTitle>Traffic overview</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground w-1/3">
+        See how your app performs across requests, hits, errors, and response times. Switch between daily, weekly, or monthly views to spot trends fast.
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <ChartContainer config={chartConfig}>
+        <ChartContainer className="h-[400px] w-full" config={chartConfig}>
           <AreaChart
             accessibilityLayer
             data={chartData}
@@ -65,50 +156,48 @@ export function ChartAreaGradient({ className }: { className?: string }) {
               dataKey="month"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              tickMargin={12}
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <defs>
-              <linearGradient id={fillPush} x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-push)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-push)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id={fillEmail} x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-email)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-email)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
             <Area
-              dataKey="push"
-              type="natural"
-              fill={`url(#${fillPush})`}
+              dataKey="mobile"
+              type='linear'
+              dot={{r:4}}
+              fill="url(#fillMobile)"
               fillOpacity={0.4}
-              stroke="var(--color-push)"
+              stroke="var(--color-mobile)"
+              strokeWidth={2}
               stackId="a"
             />
             <Area
-              dataKey="email"
-              type="natural"
-              fill={`url(#${fillEmail})`}
+              dataKey="desktop"
+              type='linear'
+              dot={{r:4}}
+              fill="url(#fillDesktop)"
               fillOpacity={0.4}
-              stroke="var(--color-email)"
+              strokeWidth={2}
+              stroke="var(--color-desktop)"
+              stackId="a"
+            />
+            <Area
+              dataKey="tablet"
+              type='linear'
+              dot={{r:4}}
+              fill="url(#fillTablet)"
+              fillOpacity={0.4}
+              strokeWidth={2}
+              stroke="var(--color-tablet)"
+              stackId="a"
+            />
+            <Area
+              dataKey="iphone"
+              type='linear'
+              dot={{r:4}}
+              fill="url(#fillIphone)"
+              fillOpacity={0.4}
+              strokeWidth={2}
+              stroke="var(--color-iphone)"
               stackId="a"
             />
           </AreaChart>
@@ -117,3 +206,5 @@ export function ChartAreaGradient({ className }: { className?: string }) {
     </Card>
   )
 }
+
+export default ChartAreaGradient

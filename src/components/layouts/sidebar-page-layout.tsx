@@ -33,7 +33,6 @@ import {
   CustomerService01Icon,
   HelpCircleIcon,
   PanelLeftIcon,
-  PlusMinusIcon,
   SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"

@@ -1,18 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  ChartAreaGradient,
-  ChartBarMixed,
-  DashboardStats,
-  DashboardTable,
-} from "./components"
 import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
+import ChartAreaGradient from "./components/chart-area-gradient"
+import { DashboardStats, DashboardTable } from "./components"
 
 export default function DashboardPage() {
   return (
-    <div className="px-8 pb-4 pt-2">
+    <div className="px-8 pb-4 pt-2 flex flex-col gap-8">
+
       <DashboardStats />
+
+      <ChartAreaGradient />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1">
         <Card className="p-0 rounded-none gap-4 shadow-none ring-0">
@@ -22,7 +21,7 @@ export default function DashboardPage() {
               <CardDescription>The most recent campaigns you've created.</CardDescription>
             </div>
             <Button size={'xs'}>
-                View all
+              View all
               <HugeiconsIcon icon={ArrowRight01Icon} />
             </Button>
           </CardHeader>
@@ -33,8 +32,8 @@ export default function DashboardPage() {
         <Card className="p-0 rounded-none gap-4 shadow-none ring-0">
           <CardHeader className="p-0 gap-1 flex items-start justify-between">
             <div>
-            <CardTitle>Recent Events</CardTitle>
-            <CardDescription>The most recent events you've created.</CardDescription>
+              <CardTitle>Recent Events</CardTitle>
+              <CardDescription>The most recent events you've created.</CardDescription>
             </div>
             <Button size={'xs'}>
               View all
