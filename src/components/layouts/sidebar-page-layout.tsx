@@ -1,4 +1,8 @@
 import {
+  AvatarGroup,
+  AvatarGroupCount,
+} from "@/components/ui/avatar"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -36,7 +40,8 @@ import {
   SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"
-import { CardTitle } from "../ui/card"
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { Badge } from "../ui/badge"
 function HeaderHelpMenu() {
   return (
     <DropdownMenu>
@@ -251,6 +256,41 @@ function FooterAvatar() {
   )
 }
 
+export function PlanBanner() {
+  return (
+    <Card className="mb-4">
+      <CardHeader>
+      <AvatarGroup className="mb-4">
+      <Avatar>
+        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
+        <AvatarFallback>LR</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarImage
+          src="https://github.com/evilrabbit.png"
+          alt="@evilrabbit"
+        />
+        <AvatarFallback>ER</AvatarFallback>
+      </Avatar>
+    </AvatarGroup>
+    <div className="flex items-center gap-2">
+        <CardTitle>Growth Plan</CardTitle>
+        <Badge variant="outline">Free Plan</Badge>
+    </div>
+        <CardDescription>You are on the Growth plan. Renews automatically unless cancelled.</CardDescription>
+      </CardHeader>
+      <CardFooter className="gap-2">
+        <Button variant="outline">Go to Plan</Button>
+        <Button variant="outline">Dismiss</Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
 export function LayoutSidebar() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
@@ -376,8 +416,11 @@ export function LayoutSidebar() {
                 ))}
               </nav>
             </div>
+            <div className="flex gap-2 flex-col">
+            <PlanBanner />
             <div className="flex items-center gap-2">
               <FooterAvatar />
+            </div>
             </div>
           </div>
 
