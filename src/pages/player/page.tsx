@@ -1,4 +1,5 @@
 import { ImportUsersDropdown, PlayerTable } from "./components"
+import FilterPlayer from "./components/filter-player"
 
 export default function PlayerPage() {
   return (
@@ -6,6 +7,7 @@ export default function PlayerPage() {
       <div className="flex justify-end">
         <ImportUsersDropdown />
       </div>
+      <FilterPlayer />
       <PlayerTable />
     </div>
   )

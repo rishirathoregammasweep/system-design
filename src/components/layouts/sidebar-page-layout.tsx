@@ -15,9 +15,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
-import { useMemo } from "react"
+import { useMemo, type CSSProperties } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { NavLink, Outlet, useLocation } from "react-router-dom"
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 import {
   Avatar,
   AvatarFallback,
@@ -32,12 +32,11 @@ import {
   CancelIcon,
   CustomerService01Icon,
   HelpCircleIcon,
-  PanelLeftIcon,
+  PanelLeft,
   SidebarLeftIcon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"
 import { CardTitle } from "../ui/card"
-
 function HeaderHelpMenu() {
   return (
     <DropdownMenu>
@@ -254,6 +253,7 @@ function FooterAvatar() {
 
 export function LayoutSidebar() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
 
   const pageMeta = useMemo(() => {
     if (pathname === "/templates/new") {
@@ -278,132 +278,159 @@ export function LayoutSidebar() {
   }, [pathname])
 
   const isSettings = pathname.startsWith("/settings")
+  const layoutColumns = isSettings
+    ? "minmax(0, 2fr) minmax(0, 4fr)"
+    : "minmax(0, 1fr) minmax(0, 5fr)"
 
   return (
     <div
       className={cn(
-        "grid h-screen items-stretch bg-neutral-50/40 p-0 md:items-center w-full md:p-2 dark:bg-neutral-900/40",
-        isSettings ? "grid-cols-1 md:grid-cols-6" : "grid-cols-1 md:grid-cols-6"
+        "grid h-screen w-full grid-cols-1 items-stretch bg-neutral-50/40 p-0 dark:bg-neutral-900/40 md:items-center md:p-2 md:[grid-template-columns:var(--layout-cols)] md:transition-[grid-template-columns] md:duration-300 md:ease-out"
       )}
+      style={{ "--layout-cols": layoutColumns } as CSSProperties}
     >
-      {!isSettings ? (
-        <div className="hidden md:col-span-1 md:flex md:h-full md:flex-col md:justify-between md:p-4 w-full">
-          <div className="space-y-8 w-full">
-            <div className="flex items-center gap-2 justify-between w-full">
-              <svg
-                fill="none"
-                height="48"
-                viewBox="0 0 35 48"
-                width="35"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clipRule="evenodd" fill="#2563eb" fillRule="evenodd">
-                  <path d="m34.6416 14v8.0492h-9.9697v-2.2927z" />
-                  <path
-                    d="m34.6394 14.0001-9.9697 5.7565-7.3513-4.2436v-11.513z"
-                    opacity=".9"
-                  />
-                  <path
-                    d="m17.3207 4v11.513l-7.34902 4.2436-9.96972688-5.7565z"
-                    opacity=".8"
-                  />
-                  <path
-                    d="m9.96973 19.7565v8.4868l-9.96973 5.756v-19.9993z"
-                    opacity=".7"
-                  />
-                  <path
-                    d="m17.3187 32.4871v11.5129l-17.3187-10.0006 9.96973-5.756z"
-                    opacity=".6"
-                  />
-                  <path
-                    d="m34.6394 33.9994-17.321 10.0006v-11.5129l7.3513-4.2437z"
-                    opacity=".5"
-                  />
-                  <path
-                    d="m34.6416 25.9507v8.0487l-9.9697-5.756v-2.2927z"
-                    opacity=".4"
-                  />
-                </g>
-              </svg>
-              <div className="flex items-center gap-2">
-                <Button variant={"secondary"} size={'icon-lg'} className="rounded-full">
-                  <HugeiconsIcon icon={PanelLeftIcon} strokeWidth={2} />
-                </Button>
-                <Button variant={"secondary"} size={'icon-lg'} className="rounded-full">
-                  <HugeiconsIcon icon={AddIcon} strokeWidth={2} />
-                </Button>
+      <div className="hidden w-full md:col-span-1 md:flex md:h-full">
+        <div className="relative h-full w-full">
+          <div
+            className={cn(
+              "absolute inset-0 flex h-full w-full flex-col justify-between p-4 transition-all duration-300 ease-out",
+              isSettings
+                ? "pointer-events-none translate-x-4 opacity-0"
+                : "pointer-events-auto translate-x-0 opacity-100"
+            )}
+          >
+            <div className="w-full space-y-8">
+              <div className="flex w-full items-center justify-between gap-2">
+                <div className="max-w-10 overflow-hidden opacity-100">
+                  <svg
+                    className="shrink-0"
+                    fill="none"
+                    height="48"
+                    viewBox="0 0 35 48"
+                    width="35"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipRule="evenodd" fill="#2563eb" fillRule="evenodd">
+                      <path d="m34.6416 14v8.0492h-9.9697v-2.2927z" />
+                      <path
+                        d="m34.6394 14.0001-9.9697 5.7565-7.3513-4.2436v-11.513z"
+                        opacity=".9"
+                      />
+                      <path
+                        d="m17.3207 4v11.513l-7.34902 4.2436-9.96972688-5.7565z"
+                        opacity=".8"
+                      />
+                      <path
+                        d="m9.96973 19.7565v8.4868l-9.96973 5.756v-19.9993z"
+                        opacity=".7"
+                      />
+                      <path
+                        d="m17.3187 32.4871v11.5129l-17.3187-10.0006 9.96973-5.756z"
+                        opacity=".6"
+                      />
+                      <path
+                        d="m34.6394 33.9994-17.321 10.0006v-11.5129l7.3513-4.2437z"
+                        opacity=".5"
+                      />
+                      <path
+                        d="m34.6416 25.9507v8.0487l-9.9697-5.756v-2.2927z"
+                        opacity=".4"
+                      />
+                    </g>
+                  </svg>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className=" overflow-hidden opacity-100 flex items-center gap-2">
+                    <Button variant={"secondary"} size={"icon-lg"} className="rounded-full">
+                      <HugeiconsIcon icon={PanelLeft} strokeWidth={2} />
+                    </Button>
+                    <Button variant={"secondary"} size={"icon-lg"} className="rounded-full">
+                      <HugeiconsIcon icon={AddIcon} strokeWidth={2} />
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <nav className="space-y-4">
-              {sidebarMenus.map((menu) => (
-                <NavLink
-                  key={menu.path}
-                  to={menu.path}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0",
-                      isActive ||
-                        (menu.path === "/settings" &&
-                          pathname.startsWith("/settings"))
-                        ? "opacity-100"
-                        : "opacity-50 hover:opacity-100"
-                    )
-                  }
-                >
-                  <HugeiconsIcon strokeWidth={1.5} icon={menu.icon} />
-                  <CardTitle className="scroll-m-20 text-md font-semibold tracking-tight">
-                    {menu.title}
-                  </CardTitle>
-                </NavLink>
-              ))}
-            </nav>
-          </div>
-          <div className="flex items-center gap-2">
-            <FooterAvatar />
-          </div>
-        </div>
-      ) : (
-        <div className="bg-muted/30 hidden md:col-span-2 md:flex md:h-full md:w-full md:flex-col md:items-end md:justify-between md:px-4 md:py-6 dark:bg-muted/10">
-          <div className="ms-auto flex h-full w-max min-w-0 max-w-full flex-col justify-between">
-            <div className="space-y-8">
-              <Button variant="secondary" size="sm" className="gap-2" asChild>
-                <NavLink to="/dashboard">
-                  <HugeiconsIcon icon={CancelIcon} strokeWidth={2} />
-                  Exit settings
-                </NavLink>
-              </Button>
-              <nav className="space-y-3" aria-label="Settings sections">
-                {settingsSidebarMenu.map((menu) => (
-                <NavLink
-                key={menu.path}
-                to={menu.path}
-                className={({ isActive }) =>
-                  cn(
-                    "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0",
-                    isActive ? "opacity-100"
-                      : "opacity-50 hover:opacity-100"
-                  )
-                }
-              >
-                <HugeiconsIcon strokeWidth={1.5} size={20} icon={menu.icon} />
-                <CardTitle className="scroll-m-20 text-sm font-semibold tracking-tight">
-                  {menu.title}
-                </CardTitle>
-              </NavLink>
-              ))}
+              <nav className="space-y-4">
+                {sidebarMenus.map((menu) => (
+                  <NavLink
+                    key={menu.path}
+                    to={menu.path}
+                    className={({ isActive }) =>
+                      cn(
+                        "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0",
+                        isActive ||
+                          (menu.path === "/settings" &&
+                            pathname.startsWith("/settings"))
+                          ? "opacity-100"
+                          : "opacity-50 hover:opacity-100"
+                      )
+                    }
+                  >
+                    <HugeiconsIcon strokeWidth={1.5} icon={menu.icon} />
+                    <div className="max-w-36 overflow-hidden opacity-100">
+                      <CardTitle className="scroll-m-20 text-md font-semibold tracking-tight">
+                        {menu.title}
+                      </CardTitle>
+                    </div>
+                  </NavLink>
+                ))}
               </nav>
             </div>
-            <div className="flex items-center gap-2 self-end">
+            <div className="flex items-center gap-2">
               <FooterAvatar />
             </div>
           </div>
+
+          <div
+            className={cn(
+              "bg-muted/30 absolute inset-0 flex h-full w-full flex-col items-end justify-between px-4 py-6 transition-all duration-300 ease-out dark:bg-muted/10",
+              isSettings
+                ? "pointer-events-auto translate-x-0 opacity-100"
+                : "pointer-events-none -translate-x-4 opacity-0"
+            )}
+          >
+            <div className="ms-auto flex h-full w-max min-w-0 max-w-full flex-col justify-between">
+              <div className="space-y-8">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => navigate(-1)}
+                >
+                  <HugeiconsIcon icon={CancelIcon} strokeWidth={2} />
+                  Exit settings
+                </Button>
+                <nav className="space-y-3" aria-label="Settings sections">
+                  {settingsSidebarMenu.map((menu) => (
+                    <NavLink
+                      key={menu.path}
+                      to={menu.path}
+                      className={({ isActive }) =>
+                        cn(
+                          "flex cursor-pointer items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-0 duration-0",
+                          isActive ? "opacity-100" : "opacity-50 hover:opacity-100"
+                        )
+                      }
+                    >
+                      <HugeiconsIcon strokeWidth={1.5} size={20} icon={menu.icon} />
+                      <CardTitle className="scroll-m-20 text-sm font-semibold tracking-tight">
+                        {menu.title}
+                      </CardTitle>
+                    </NavLink>
+                  ))}
+                </nav>
+              </div>
+              <div className="flex items-center gap-2 self-end">
+                <FooterAvatar />
+              </div>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
 
       <div
         className={cn(
-          "col-span-6 flex h-full min-h-0 w-full flex-col overflow-hidden rounded-none bg-white dark:bg-neutral-900 md:rounded-lg md:shadow",
-          isSettings ? "md:col-span-4" : "md:col-span-5"
+          "col-span-1 flex h-full min-h-0 w-full flex-col overflow-hidden rounded-none bg-white dark:bg-neutral-900 md:col-span-1 md:rounded-lg md:shadow"
         )}
       >
         <div className="flex min-h-0 flex-1 flex-col overflow-auto">

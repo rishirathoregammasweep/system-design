@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import ChartAreaGradient from "./components/chart-area-gradient"
-import { DashboardStats, DashboardTable } from "./components"
+import { DashboardTable } from "./components"
+import { DashboardStats } from "./components/dashboard-stats"
 
 export default function DashboardPage() {
   return (
