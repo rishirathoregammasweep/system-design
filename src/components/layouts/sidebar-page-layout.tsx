@@ -1,7 +1,18 @@
 import {
-  AvatarGroup,
-  AvatarGroupCount,
-} from "@/components/ui/avatar"
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { AvatarGroup } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
-import { useMemo, type CSSProperties } from "react"
+import { useMemo, type CSSProperties, type ReactNode } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 import {
@@ -36,8 +47,11 @@ import {
   CancelIcon,
   CustomerService01Icon,
   HelpCircleIcon,
+  InformationCircleIcon,
   PanelLeft,
   SidebarLeftIcon,
+  SparklesIcon,
+  Tick02Icon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
@@ -164,20 +178,20 @@ function HeaderAvatar() {
 function SidebarMenusOnSmallScreen() {
   return (
     <DropdownMenu>
-    <DropdownMenuTrigger>
-    <Button size={"icon-sm"} variant={"outline"}>
-      <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={2} />
-    </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent className="min-w-40" align="start">
-      {sidebarMenus.map((menu) => (
-        <DropdownMenuItem key={menu.path} className="cursor-pointer">
+      <DropdownMenuTrigger>
+        <Button size={"icon-sm"} variant={"outline"}>
+          <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={2} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-40" align="start">
+        {sidebarMenus.map((menu) => (
+          <DropdownMenuItem key={menu.path} className="cursor-pointer">
             <HugeiconsIcon icon={menu.icon} strokeWidth={2} />
             {menu.title}
-        </DropdownMenuItem>
-      ))}
-    </DropdownMenuContent>
-  </DropdownMenu>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
@@ -260,27 +274,27 @@ export function PlanBanner() {
   return (
     <Card className="mb-4">
       <CardHeader>
-      <AvatarGroup className="mb-4">
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
-        <AvatarFallback>LR</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarImage
-          src="https://github.com/evilrabbit.png"
-          alt="@evilrabbit"
-        />
-        <AvatarFallback>ER</AvatarFallback>
-      </Avatar>
-    </AvatarGroup>
-    <div className="flex items-center gap-2">
-        <CardTitle>Growth Plan</CardTitle>
-        <Badge variant="outline">Free Plan</Badge>
-    </div>
+        <AvatarGroup className="mb-4">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <Avatar>
+            <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
+            <AvatarFallback>LR</AvatarFallback>
+          </Avatar>
+          <Avatar>
+            <AvatarImage
+              src="https://github.com/evilrabbit.png"
+              alt="@evilrabbit"
+            />
+            <AvatarFallback>ER</AvatarFallback>
+          </Avatar>
+        </AvatarGroup>
+        <div className="flex items-center gap-2">
+          <CardTitle>Growth Plan</CardTitle>
+          <Badge variant="outline">Free Plan</Badge>
+        </div>
         <CardDescription>You are on the Growth plan. Renews automatically unless cancelled.</CardDescription>
       </CardHeader>
       <CardFooter className="gap-2">
@@ -288,6 +302,219 @@ export function PlanBanner() {
         <Button variant="outline">Dismiss</Button>
       </CardFooter>
     </Card>
+  )
+}
+
+function OnboardingSectionHeader({
+  title,
+  infoLabel,
+}: {
+  title: string
+  infoLabel: string
+}) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <h3 className="text-sm font-semibold tracking-tight text-foreground">{title}</h3>
+      <button
+        type="button"
+        className="text-muted-foreground hover:text-foreground rounded-full p-0.5 transition-colors"
+        aria-label={infoLabel}
+      >
+        <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={2} className="size-4" />
+      </button>
+    </div>
+  )
+}
+
+function OnboardingTaskTrigger({
+  completed,
+  title,
+  badge,
+}: {
+  completed?: boolean
+  title: string
+  badge?: ReactNode
+}) {
+  return (
+    <AccordionTrigger
+      className={cn(
+        "items-center gap-3 px-4 py-3.5 hover:no-underline",
+        !completed && "text-muted-foreground"
+      )}
+    >
+      <span className="flex size-8 shrink-0 items-center justify-center">
+        {completed ? (
+          <span className="flex size-7 items-center justify-center rounded-full bg-emerald-600 text-white dark:bg-emerald-500">
+            <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3.5" />
+          </span>
+        ) : (
+          <HugeiconsIcon
+            icon={SparklesIcon}
+            strokeWidth={1.5}
+            className="size-5 text-muted-foreground"
+          />
+        )}
+      </span>
+      <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
+        <span
+          className={cn(
+            "text-left text-sm font-semibold",
+            completed
+              ? "text-foreground"
+              : "text-muted-foreground group-aria-expanded/accordion-trigger:text-foreground"
+          )}
+        >
+          {title}
+        </span>
+        {badge}
+      </span>
+    </AccordionTrigger>
+  )
+}
+
+const CreateOnboardingConfiguration = () => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button type="button" variant="outline" size="sm" className="gap-1.5">
+          Store setup
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        showCloseButton={false}
+        className="!max-w-2xl gap-0 overflow-hidden p-0 sm:!max-w-2xl"
+      >
+        <div className="max-h-[min(85vh,720px)] overflow-y-auto p-4 sm:p-6">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Store onboarding checklist</DialogTitle>
+            <DialogDescription>
+              Complete these steps to set up your online store.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <OnboardingSectionHeader
+                title="Set-up your online store"
+                infoLabel="About setting up your online store"
+              />
+              <div className="overflow-hidden rounded-xl border border-border bg-background">
+                <Accordion
+                  type="single"
+                  collapsible
+                  defaultValue="add-products"
+                  className="w-full"
+                >
+                  <AccordionItem value="add-products" className="border-b border-border last:border-b-0">
+                    <OnboardingTaskTrigger
+                      completed
+                      title="Add products"
+                      badge={
+                        <Badge
+                          variant="outline"
+                          className="border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                        >
+                          Ready
+                        </Badge>
+                      }
+                    />
+                    <AccordionContent className="px-4 pb-4 ps-[3.25rem]">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Add and manage products in your store effortlessly. Control product details,
+                        pricing, and inventory levels all in one place. Create categories to keep your
+                        products organized and easily accessible.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="pos" className="border-b border-border last:border-b-0">
+                    <OnboardingTaskTrigger title="Get the point of sale application" />
+                    <AccordionContent className="px-4 pb-4 ps-[3.25rem]">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Download and install the point of sale app to sell in person and keep orders in
+                        sync with your online catalog.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="price-stock" className="border-b border-border last:border-b-0">
+                    <OnboardingTaskTrigger title="Product price & stock" />
+                    <AccordionContent className="px-4 pb-4 ps-[3.25rem]">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Configure pricing rules and stock levels so customers always see accurate
+                        availability.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <OnboardingSectionHeader
+                title="Store settings"
+                infoLabel="About store settings"
+              />
+              <div className="overflow-hidden rounded-xl border border-border bg-background">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="storefront" className="border-0">
+                    <OnboardingTaskTrigger title="Customize your store-front" />
+                    <AccordionContent className="px-4 pb-4 ps-[3.25rem]">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Adjust themes, navigation, and branding so your storefront matches your brand.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <OnboardingSectionHeader
+                title="Prepare for launch"
+                infoLabel="About launch preparation"
+              />
+              <div className="overflow-hidden rounded-xl border border-border bg-background">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="shipping" className="border-b border-border last:border-b-0">
+                    <OnboardingTaskTrigger title="Set up shipping options" />
+                    <AccordionContent className="px-4 pb-4 ps-[3.25rem]">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Define shipping zones, rates, and carriers before you start taking orders.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="tax" className="border-b border-border last:border-b-0">
+                    <OnboardingTaskTrigger title="Configure tax settings" />
+                    <AccordionContent className="px-4 pb-4 ps-[3.25rem]">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Set tax rates and rules to stay compliant in the regions you sell into.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border bg-muted/40 p-4 dark:bg-muted/20">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm font-semibold text-foreground">Boost your online presence</span>
+                <Badge className="border-0 bg-violet-600 px-2 text-[0.65rem] font-semibold uppercase tracking-wide text-white hover:bg-violet-600">
+                  PRO
+                </Badge>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Take your e-commerce business to the next level with advanced features designed to
+                increase sales and improve customer experience.
+              </p>
+              <div className="mt-4">
+                <Button type="button" size="sm" className="bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white">
+                  Upgrade
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
@@ -417,10 +644,10 @@ export function LayoutSidebar() {
               </nav>
             </div>
             <div className="flex gap-2 flex-col">
-            <PlanBanner />
-            <div className="flex items-center gap-2">
-              <FooterAvatar />
-            </div>
+              <PlanBanner />
+              <div className="flex items-center gap-2">
+                <FooterAvatar />
+              </div>
             </div>
           </div>
 
@@ -438,7 +665,7 @@ export function LayoutSidebar() {
                   variant="secondary"
                   size="sm"
                   className="gap-2"
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/')}
                 >
                   <HugeiconsIcon icon={CancelIcon} strokeWidth={2} />
                   Exit settings
@@ -495,6 +722,7 @@ export function LayoutSidebar() {
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-1 pt-0.5">
+                <CreateOnboardingConfiguration />
                 <HeaderHelpMenu />
                 <HeaderAvatar />
               </div>
