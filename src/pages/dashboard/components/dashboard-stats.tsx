@@ -16,10 +16,10 @@ const stats = [
 
 export function DashboardStats() {
   return (
-    <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {stats.map((item) => (
         <Item key={item.label} variant="muted">
-          <ItemContent >
+          <ItemContent>
             <ItemTitle>{item.label}</ItemTitle>
             <ItemDescription className="leading-7 text-2xl font-medium">{item.value}</ItemDescription>
           </ItemContent>

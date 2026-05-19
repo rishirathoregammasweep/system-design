@@ -139,74 +139,76 @@ const ChartAreaGradient = () => {
   return (
     <Item variant="muted">
       <ItemContent>
-        <ItemTitle>Traffic overview</ItemTitle>
-        <ItemDescription className="text-sm text-muted-foreground w-1/3">
-        See how your app performs across requests, hits, errors, and response times. Switch between daily, weekly, or monthly views to spot trends fast.
-        </ItemDescription>
+        <div className="p-4 space-y-1">
+          <ItemTitle className="font-semibold text-lg">Traffic overview</ItemTitle>
+          <ItemDescription className="text-sm text-muted-foreground ">
+            See how your app performs across requests, hits, errors, and response times. Switch between daily, weekly, or monthly views to spot trends fast.
+          </ItemDescription>
+        </div>
       </ItemContent>
 
       <ChartContainer className="h-[400px] w-full" config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={12}
-              minTickGap={32}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Area
-              dataKey="mobile"
-              type='linear'
-              dot={{r:4}}
-              fill="url(#fillMobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              strokeWidth={2}
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type='linear'
-              dot={{r:4}}
-              fill="url(#fillDesktop)"
-              fillOpacity={0.4}
-              strokeWidth={2}
-              stroke="var(--color-desktop)"
-              stackId="a"
-            />
-            <Area
-              dataKey="tablet"
-              type='linear'
-              dot={{r:4}}
-              fill="url(#fillTablet)"
-              fillOpacity={0.4}
-              strokeWidth={2}
-              stroke="var(--color-tablet)"
-              stackId="a"
-            />
-            <Area
-              dataKey="iphone"
-              type='linear'
-              dot={{r:4}}
-              fill="url(#fillIphone)"
-              fillOpacity={0.4}
-              strokeWidth={2}
-              stroke="var(--color-iphone)"
-              stackId="a"
-            />
-            <ChartLegend className="float-right" content={<ChartLegendContent />} />
-          </AreaChart>
-        </ChartContainer>
+        <AreaChart
+          accessibilityLayer
+          data={chartData}
+          margin={{
+            left: 12,
+            right: 12,
+          }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="month"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={12}
+            minTickGap={32}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <Area
+            dataKey="mobile"
+            type='linear'
+            dot={{ r: 4 }}
+            fill="url(#fillMobile)"
+            fillOpacity={0.4}
+            stroke="var(--color-mobile)"
+            strokeWidth={2}
+            stackId="a"
+          />
+          <Area
+            dataKey="desktop"
+            type='linear'
+            dot={{ r: 4 }}
+            fill="url(#fillDesktop)"
+            fillOpacity={0.4}
+            strokeWidth={2}
+            stroke="var(--color-desktop)"
+            stackId="a"
+          />
+          <Area
+            dataKey="tablet"
+            type='linear'
+            dot={{ r: 4 }}
+            fill="url(#fillTablet)"
+            fillOpacity={0.4}
+            strokeWidth={2}
+            stroke="var(--color-tablet)"
+            stackId="a"
+          />
+          <Area
+            dataKey="iphone"
+            type='linear'
+            dot={{ r: 4 }}
+            fill="url(#fillIphone)"
+            fillOpacity={0.4}
+            strokeWidth={2}
+            stroke="var(--color-iphone)"
+            stackId="a"
+          />
+          <ChartLegend className="float-right" content={<ChartLegendContent />} />
+        </AreaChart>
+      </ChartContainer>
       <ItemContent>
       </ItemContent>
     </Item>
