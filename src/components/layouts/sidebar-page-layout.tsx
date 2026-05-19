@@ -300,6 +300,12 @@ export function LayoutSidebar() {
         description: "View and manage player details.",
       }
     }
+    if (pathname === "/campaign-details") {
+      return {
+        heading: "Campaign Details",
+        description: "View and manage campaign details.",
+      }
+    }
     if (pathname === "/templates/new") {
       return {
         heading: "Create email template",

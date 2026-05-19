@@ -294,39 +294,6 @@ const Page = () => {
                         </CardContent>
                     </Card>
                     <Separator className='my-8' />
-
-                    <Card className='p-0 rounded-none gap-4 shadow-none ring-0'>
-                        <CardHeader>
-                        <CardTitle>Channel Configured</CardTitle>
-                            <CardDescription>All channels configured for the player</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className='grid grid-cols-2 gap-4 gap-y-8'>
-                                {channels.map((channel) => (
-                                    <div>
-                                        <HugeiconsIcon strokeWidth={1} size={20} icon={channel.icon}></HugeiconsIcon>
-                                        <h4 className="scroll-m-20 mb-2 text-sm font-semibold tracking-tight">
-                                            {channel.name}
-                                        </h4>
-                                        {channel.allowed && (
-                                            <Badge variant={'default'}>
-                                                <HugeiconsIcon icon={Tick02FreeIcons} />
-                                                Allowed
-                                            </Badge>
-                                        )}
-                                        {!channel.allowed && (
-                                            <Badge variant={'destructive'}>
-                                                <HugeiconsIcon icon={CancelIcon} />
-                                                Not Allowed
-                                            </Badge>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Separator className='my-8' />
                     <Item variant="outline">
                         <ItemContent>
                             <ItemTitle>Phone Number</ItemTitle>

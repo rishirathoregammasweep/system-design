@@ -110,7 +110,7 @@ export default function PlayerTable() {
           </TableHeader>
           <TableBody>
             {rows.map((row, index) => (
-              <TableRow key={row.id}>
+              <TableRow onClick={()=>{window.location.href = `/player-details`}} key={row.id}>
                 <TableCell className="text-muted-foreground py-2 text-center tabular-nums">
                   {index + 1}
                 </TableCell>
