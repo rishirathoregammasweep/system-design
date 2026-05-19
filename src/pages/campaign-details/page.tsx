@@ -18,15 +18,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator';
 import {
-    User,
-    Mail,
-    Phone,
     Calendar,
-    MapPin,
-    VenusAndMars,
-    Briefcase,
-    Globe,
-    IdCard,
     TimerReset,
 } from 'lucide-react';
 import { HugeiconsIcon } from "@hugeicons/react";

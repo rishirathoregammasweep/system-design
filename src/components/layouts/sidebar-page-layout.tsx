@@ -1,17 +1,3 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { AvatarGroup } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -47,11 +33,8 @@ import {
   CancelIcon,
   CustomerService01Icon,
   HelpCircleIcon,
-  InformationCircleIcon,
   PanelLeft,
   SidebarLeftIcon,
-  SparklesIcon,
-  Tick02Icon,
 } from "@hugeicons/core-free-icons"
 import { settingsSidebarMenu } from "./setting-sidebar-menus"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
