@@ -5,21 +5,25 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import ChartAreaGradient from "./components/chart-area-gradient"
 import { DashboardTable } from "./components"
 import { DashboardStats } from "./components/dashboard-stats"
+import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
 
 export default function DashboardPage() {
   return (
-    <div className="px-8 pb-4 pt-2 flex flex-col gap-8">
+    <div className="px-8 pb-4 pt-2 flex flex-col gap-4">
 
       <DashboardStats />
 
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1">
       <ChartAreaGradient />
+      <ChartAreaGradient />
+      </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1">
-        <Card className="p-0 rounded-none gap-4 shadow-none ring-0">
+      <Card className="p-0 rounded-none gap-4 shadow-none ring-0">
           <CardHeader className="p-0 gap-1 flex items-start justify-between">
             <div>
-              <CardTitle>Recent Campaigns</CardTitle>
-              <CardDescription>The most recent campaigns you've created.</CardDescription>
+              <CardTitle>Recent Events</CardTitle>
+              <CardDescription>The most recent events you've created.</CardDescription>
             </div>
             <Button size={'xs'}>
               View all

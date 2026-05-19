@@ -19,6 +19,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
 
 export const description = "An area chart with gradient fill"
 
@@ -136,15 +137,15 @@ const chartConfig = {
 
 const ChartAreaGradient = () => {
   return (
-    <Card className="shadow-none p-0 ring-0 rounded-none">
-      <CardHeader className="gap-1 p-0">
-        <CardTitle>Traffic overview</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground w-1/3">
+    <Item variant="muted">
+      <ItemContent>
+        <ItemTitle>Traffic overview</ItemTitle>
+        <ItemDescription className="text-sm text-muted-foreground w-1/3">
         See how your app performs across requests, hits, errors, and response times. Switch between daily, weekly, or monthly views to spot trends fast.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="p-0">
-        <ChartContainer className="h-[400px] w-full" config={chartConfig}>
+        </ItemDescription>
+      </ItemContent>
+
+      <ChartContainer className="h-[400px] w-full" config={chartConfig}>
           <AreaChart
             accessibilityLayer
             data={chartData}
@@ -206,8 +207,9 @@ const ChartAreaGradient = () => {
             <ChartLegend className="float-right" content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+      <ItemContent>
+      </ItemContent>
+    </Item>
   )
 }
 
