@@ -35,6 +35,9 @@ import UsersPage from "@/pages/users/page"
 import LoginPage from "@/pages/login/page"
 import SignupPage from "@/pages/signup/page"
 import OnboardingPage from "./pages/onboarding/page"
+import PlayerDetailsPage from "@/pages/player-details/page"
+import CampaignDetailsPage from "@/pages/campaign-details/page"
+
 function PageTitle({ title }: { title: string }) {
   return (
     <div className="p-8">
@@ -55,7 +58,6 @@ const routeElements: Partial<
   "/campaigns": <CampaignPage />,
   "/journeys": <JourneysPage />,
   "/triggers": <TriggersPage />,
-  "/api": <ApiPage />,
   "/templates": <TemplatesPage />,
 }
 
@@ -102,6 +104,8 @@ export function App() {
           </Route>
           <Route path="create-journey" element={<CreateJourneyPage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="player-details" element={<PlayerDetailsPage />} />
+          <Route path="campaign-details" element={<CampaignDetailsPage />} />
         </Route>
         <Route path="onboarding" element={<OnboardingPage />} />
           <Route path="login" element={<LoginPage />} />
