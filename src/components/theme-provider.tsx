@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import * as React from "react"
+import { initThemeColorsFromStorage } from "@/lib/theme-colors"
 
 type Theme = "dark" | "light" | "system"
 type ResolvedTheme = "dark" | "light"
@@ -119,6 +120,10 @@ export function ThemeProvider({
     },
     [disableTransitionOnChange]
   )
+
+  React.useEffect(() => {
+    initThemeColorsFromStorage()
+  }, [])
 
   React.useEffect(() => {
     applyTheme(theme)

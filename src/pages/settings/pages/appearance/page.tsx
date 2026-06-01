@@ -1,4 +1,12 @@
 import { useEffect, useMemo, useState } from "react"
+import { cn } from "@/lib/utils"
+import {
+  applyThemeColors,
+  PRIMARY_COLOR_OPTIONS,
+  SECONDARY_COLOR_OPTIONS,
+  THEME_PRIMARY_STORAGE_KEY,
+  THEME_SECONDARY_STORAGE_KEY,
+} from "@/lib/theme-colors"
 import {
   Field,
   FieldContent,
@@ -22,6 +30,24 @@ export default function AppearanceSettingsPage() {
   const { theme, setTheme } = useTheme()
   const languageOptions = useMemo(() => getLanguageSelectOptions(), [])
   const [language, setLanguage] = useState("en")
+  const [primaryColor, setPrimaryColor] = useState<string | null>(() =>
+    localStorage.getItem(THEME_PRIMARY_STORAGE_KEY)
+  )
+  const [secondaryColor, setSecondaryColor] = useState<string | null>(() =>
+    localStorage.getItem(THEME_SECONDARY_STORAGE_KEY)
+  )
+
+  const selectPrimaryColor = (color: string) => {
+    localStorage.setItem(THEME_PRIMARY_STORAGE_KEY, color)
+    setPrimaryColor(color)
+    applyThemeColors({ primary: color })
+  }
+
+  const selectSecondaryColor = (color: string) => {
+    localStorage.setItem(THEME_SECONDARY_STORAGE_KEY, color)
+    setSecondaryColor(color)
+    applyThemeColors({ secondary: color })
+  }
 
   useEffect(() => {
     if (
@@ -39,50 +65,50 @@ export default function AppearanceSettingsPage() {
   return (
     <div className="mx-0 max-w-xl space-y-10 pb-12">
 
-    <section className="space-y-4">
-    <div className="space-y-1">
-      <h2 className="text-sm font-medium">Theme</h2>
-      <p className="text-muted-foreground text-sm leading-relaxed">
-        Choose how the interface looks.
-      </p>
-    </div>
-    <RadioGroup
-      value={theme}
-      onValueChange={(value) => setTheme(value as "light" | "dark" | "system")}
-      className="grid grid-cols-3 gap-4"
-    >
-      <FieldLabel className="relative h-32" htmlFor="theme-light">
-        <Field orientation="horizontal">
-          <FieldContent>
-            <FieldTitle>Light</FieldTitle>
-          </FieldContent>
-          <RadioGroupItem value="light" id="theme-light" />
-        </Field>
-        <div className="absolute bottom-0 left-1/2 h-20 w-2/3 -translate-x-1/2 rounded-t-md border bg-white dark:text-black p-2 ">Aa</div>
-      </FieldLabel>
-      <FieldLabel className="relative h-32" htmlFor="theme-dark">
-        <Field orientation="horizontal">
-          <FieldContent>
-            <FieldTitle>Dark</FieldTitle>
-          </FieldContent>
-          <RadioGroupItem value="dark" id="theme-dark" />
-        </Field>
-        <div className="absolute bottom-0 left-1/2 h-20 w-2/3 -translate-x-1/2 rounded-t-md border bg-zinc-900 text-white p-2">Aa</div>
-      </FieldLabel>
-      <FieldLabel className="relative h-32" htmlFor="theme-system">
-        <Field orientation="horizontal">
-          <FieldContent>
-            <FieldTitle>System</FieldTitle>
-          </FieldContent>
-          <RadioGroupItem value="system" id="theme-system" />
-        </Field>
-        <div className="absolute bottom-0 left-1/2 flex h-20 w-2/3 -translate-x-1/2 overflow-hidden rounded-t-md">
-          <div className="h-full w-1/2 shadow-lg p-2 text-black bg-white">Aa</div>
-          <div className="h-full w-1/2 shadow-lg p-2 text-white bg-zinc-900">Aa</div>
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="text-sm font-medium">Theme</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Choose how the interface looks.
+          </p>
         </div>
-      </FieldLabel>
-    </RadioGroup>
-    </section>
+        <RadioGroup
+          value={theme}
+          onValueChange={(value) => setTheme(value as "light" | "dark" | "system")}
+          className="grid grid-cols-3 gap-4"
+        >
+          <FieldLabel className="relative h-32" htmlFor="theme-light">
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldTitle>Light</FieldTitle>
+              </FieldContent>
+              <RadioGroupItem value="light" id="theme-light" />
+            </Field>
+            <div className="absolute bottom-0 left-1/2 h-20 w-2/3 -translate-x-1/2 rounded-t-md border bg-white dark:text-black p-2 ">Aa</div>
+          </FieldLabel>
+          <FieldLabel className="relative h-32" htmlFor="theme-dark">
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldTitle>Dark</FieldTitle>
+              </FieldContent>
+              <RadioGroupItem value="dark" id="theme-dark" />
+            </Field>
+            <div className="absolute bottom-0 left-1/2 h-20 w-2/3 -translate-x-1/2 rounded-t-md border bg-zinc-900 text-white p-2">Aa</div>
+          </FieldLabel>
+          <FieldLabel className="relative h-32" htmlFor="theme-system">
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldTitle>System</FieldTitle>
+              </FieldContent>
+              <RadioGroupItem value="system" id="theme-system" />
+            </Field>
+            <div className="absolute bottom-0 left-1/2 flex h-20 w-2/3 -translate-x-1/2 overflow-hidden rounded-t-md">
+              <div className="h-full w-1/2 shadow-lg p-2 text-black bg-white">Aa</div>
+              <div className="h-full w-1/2 shadow-lg p-2 text-white bg-zinc-900">Aa</div>
+            </div>
+          </FieldLabel>
+        </RadioGroup>
+      </section>
 
       <section className="space-y-4">
         <div className="space-y-1">
@@ -106,6 +132,67 @@ export default function AppearanceSettingsPage() {
             ))}
           </SelectContent>
         </Select>
+      </section>
+
+      <Separator />
+
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="text-sm font-medium">Theme Colors</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Configure the theme colors for the interface
+          </p>
+        </div>
+
+        {/* Primary Colors */}
+        <div className="space-y-2 flex flex-col gap-1 ">
+          <label className="text-muted-foreground text-xs font-medium">
+            Primary Color
+          </label>
+
+          <div className="flex flex-wrap gap-3">
+            {PRIMARY_COLOR_OPTIONS.map((color) => (
+              <button
+                key={color}
+                type="button"
+                aria-label={`Set primary color to ${color}`}
+                aria-pressed={primaryColor === color}
+                onClick={() => selectPrimaryColor(color)}
+                className={cn(
+                  "size-10 rounded-full border border-border transition-all hover:scale-105",
+                  primaryColor === color &&
+                    "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                )}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Secondary Colors */}
+        {/* <div className="space-y-2">
+          <label className="text-muted-foreground text-xs font-medium">
+            Secondary Color
+          </label>
+
+          <div className="flex flex-wrap gap-3">
+            {SECONDARY_COLOR_OPTIONS.map((color) => (
+              <button
+                key={color}
+                type="button"
+                aria-label={`Set secondary color to ${color}`}
+                aria-pressed={secondaryColor === color}
+                onClick={() => selectSecondaryColor(color)}
+                className={cn(
+                  "size-10 rounded-full border border-border transition-all hover:scale-105",
+                  secondaryColor === color &&
+                    "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                )}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+        </div> */}
       </section>
 
       <Separator />
