@@ -1,11 +1,7 @@
 import type { Node } from "@xyflow/react"
 
-import type { PlusNodeData } from "../nodes-ui/plus-node"
-
-type PlusFlowNode = Node<PlusNodeData, "plus">
-
 type PlusNodePanelProps = {
-  node: PlusFlowNode
+  node: Node
 }
 
 export function PlusNodePanel({ node }: PlusNodePanelProps) {

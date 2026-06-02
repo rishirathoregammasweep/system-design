@@ -184,7 +184,7 @@ const Page = () => {
                         </CardHeader>
                         <CardContent className="p-0"> 
                             <div className='grid grid-cols-5 gap-4'>
-                                {campaignMetrics.map((item, index) => (
+                                {campaignMetrics.map((item) => (
                                     <Item variant="muted">
                                     <ItemContent>
                                       <ItemTitle>{item.title}</ItemTitle>

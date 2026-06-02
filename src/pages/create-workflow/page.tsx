@@ -90,8 +90,8 @@ export const initialEdges = [
 const Flow = () => {
 
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialEdges)
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
   const onNodesDelete = useCallback(
     (deleted: readonly Node[]) => {
@@ -124,7 +124,7 @@ const Flow = () => {
 
   const clearNodeSelection = useCallback(() => {
     setSelectedNode(null)
-    setNodes((nds: Node[]) => nds.map((n: Node) => ({ ...n, selected: false })))
+    setNodes((nds) => nds.map((n) => ({ ...n, selected: false })))
   }, [setNodes])
 
   const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
@@ -148,7 +148,7 @@ const Flow = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      setEdges((eds: Edge[]) =>
+      setEdges((eds) =>
         addEdge(
           {
             ...params,

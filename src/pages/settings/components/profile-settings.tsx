@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -13,19 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@/components/ui/input-group"
-import { Separator } from "@/components/ui/separator"
-import {
-  ArrowRight01Icon,
-  PencilEdit02Icon,
-  SecurityIcon,
-} from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 
 function FieldHeading({
   title,
@@ -73,7 +59,6 @@ export default function ProfileSettings() {
   const [lastName, setLastName] = useState("Rathore")
   const [email, setEmail] = useState("rishi.idealtechno@gmail.com")
   const [photoUrl, setPhotoUrl] = useState("https://github.com/shadcn.png")
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
 
   const [photoDialogOpen, setPhotoDialogOpen] = useState(false)
   const [emailDialogOpen, setEmailDialogOpen] = useState(false)
@@ -117,11 +102,6 @@ export default function ProfileSettings() {
     },
     []
   )
-
-  const openEmailDialog = useCallback(() => {
-    setDraftEmail(email)
-    setEmailDialogOpen(true)
-  }, [email])
 
   const saveEmail = useCallback(
     (e: React.FormEvent) => {
@@ -198,7 +178,6 @@ export default function ProfileSettings() {
           </div>
         </section>
 
-        <Separator />
 
         <section className="space-y-4">
           <FieldHeading
@@ -231,7 +210,6 @@ export default function ProfileSettings() {
           </div>
         </section>
 
-        <Separator />
 
         <section className="space-y-4">
           <FieldHeading
@@ -246,8 +224,6 @@ export default function ProfileSettings() {
             />
         </section>
 
-        <Separator />
-
         <section className="space-y-4">
           <FieldHeading
             title="Set Password"
@@ -257,8 +233,6 @@ export default function ProfileSettings() {
             Set password
           </Button>
         </section>
-
-        <Separator />
 
         <section className="space-y-4">
           <FieldHeading

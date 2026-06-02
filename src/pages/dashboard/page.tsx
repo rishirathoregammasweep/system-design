@@ -5,7 +5,6 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import ChartAreaGradient from "./components/chart-area-gradient"
 import { DashboardTable } from "./components"
 import { DashboardStats } from "./components/dashboard-stats"
-import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
 
 export default function DashboardPage() {
   return (

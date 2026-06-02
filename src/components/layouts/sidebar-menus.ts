@@ -11,7 +11,6 @@ import {
   Lightning,
   Mail01Icon,
 } from "@hugeicons/core-free-icons"
-import { UserIcon } from "lucide-react"
 
 export const sidebarMenus = [
   {

@@ -8,7 +8,6 @@ import {
   type SettingsSidebarPath,
 } from "@/components/layouts/setting-sidebar-menus"
 import AnalyticsPage from "@/pages/analytics/page"
-import ApiPage from "@/pages/api/page"
 import CampaignPage from "@/pages/campaign/page"
 import DashboardPage from "@/pages/dashboard/page"
 import EventsPage from "@/pages/events/page"

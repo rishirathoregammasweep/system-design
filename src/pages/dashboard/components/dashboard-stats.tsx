@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card"
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
 
 const stats = [

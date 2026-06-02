@@ -3,9 +3,7 @@ import { cn } from "@/lib/utils"
 import {
   applyThemeColors,
   PRIMARY_COLOR_OPTIONS,
-  SECONDARY_COLOR_OPTIONS,
   THEME_PRIMARY_STORAGE_KEY,
-  THEME_SECONDARY_STORAGE_KEY,
 } from "@/lib/theme-colors"
 import {
   Field,
@@ -33,20 +31,11 @@ export default function AppearanceSettingsPage() {
   const [primaryColor, setPrimaryColor] = useState<string | null>(() =>
     localStorage.getItem(THEME_PRIMARY_STORAGE_KEY)
   )
-  const [secondaryColor, setSecondaryColor] = useState<string | null>(() =>
-    localStorage.getItem(THEME_SECONDARY_STORAGE_KEY)
-  )
 
   const selectPrimaryColor = (color: string) => {
     localStorage.setItem(THEME_PRIMARY_STORAGE_KEY, color)
     setPrimaryColor(color)
     applyThemeColors({ primary: color })
-  }
-
-  const selectSecondaryColor = (color: string) => {
-    localStorage.setItem(THEME_SECONDARY_STORAGE_KEY, color)
-    setSecondaryColor(color)
-    applyThemeColors({ secondary: color })
   }
 
   useEffect(() => {

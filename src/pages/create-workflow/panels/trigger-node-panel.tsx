@@ -9,10 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-type TriggerFlowNode = Node<Record<string, unknown>, "trigger">
-
 type TriggerNodePanelProps = {
-  node: TriggerFlowNode
+  node: Node
 }
 
 export function TriggerNodePanel({ node }: TriggerNodePanelProps) {

@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
-import { useMemo, type CSSProperties, type ReactNode } from "react"
+import { useMemo, type CSSProperties } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 import {

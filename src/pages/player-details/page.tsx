@@ -3,7 +3,6 @@ import {
     ItemActions,
     ItemContent,
     ItemDescription,
-    ItemMedia,
     ItemTitle,
 } from "@/components/ui/item"
 
@@ -30,8 +29,7 @@ import {
     IdCard,
 } from 'lucide-react';
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AiPhone01Icon, CancelIcon, Mail01Icon, MapPinpoint01Icon, PhoneCall, PhoneOffIcon, Tick02FreeIcons } from "@hugeicons/core-free-icons";
-import { Badge } from "@/components/ui/badge";
+import { MapPinpoint01Icon, PhoneCall } from "@hugeicons/core-free-icons";
 const basicInformation = [
     {
         icon: User,
@@ -122,34 +120,6 @@ const items = [
         status: "Active",
     },
 ];
-
-
-const channels = [
-    {
-        name: 'Email',
-        allowed: true,
-        icon: Mail01Icon,
-        description: 'Email channel for the player',
-    },
-    {
-        name: 'SMS',
-        icon: AiPhone01Icon,
-        allowed: true,
-        description: 'SMS channel for the player',
-    },
-    {
-        name: 'Push',
-        allowed: false  ,
-        icon: PhoneOffIcon,
-        description: 'Push channel for the player',
-    },
-    {
-        name: 'In-App',
-        allowed: true,
-        icon: PhoneOffIcon,
-        description: 'In-App channel for the player',
-    },
-]
 
 const Page = () => {
     return (
@@ -255,7 +225,7 @@ const Page = () => {
                         </CardHeader>
                         <CardContent>
                             <div className='grid grid-cols-2 gap-4'>
-                                {basicInformation.map((item, index) => (
+                                {basicInformation.map((item) => (
                                     <div>
                                         <h4 className="scroll-m-20 text-sm font-semibold tracking-tight">
                                             {item.title}
@@ -279,7 +249,7 @@ const Page = () => {
                         </CardHeader>
                         <CardContent>
                             <div className='grid grid-cols-2 gap-4'>
-                                {basicInformation.map((item, index) => (
+                                {basicInformation.map((item,) => (
                                     <div>
                                         <h4 className="scroll-m-20 text-sm font-semibold tracking-tight">
                                             {item.title}
